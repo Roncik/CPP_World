@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="InheritanceAccess">
+      <UniqueIdentifier>{1f009a53-a448-445a-9fb4-6945908a8674}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LabSamples%28main%29">
+      <UniqueIdentifier>{5998fe2f-f34f-4fd2-a299-c13e65c8db12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LivingWorld">
+      <UniqueIdentifier>{0415856e-8f89-4f7d-b646-bf387b4585ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RecursionTiming">
+      <UniqueIdentifier>{a0592c79-29e9-44ec-9bd1-f50e7d930ce7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SimpleClass">
+      <UniqueIdentifier>{b29953da-68d1-4641-a913-32648d629682}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="InheritanceAccess\VirtualMethodSample.h">
+      <Filter>InheritanceAccess</Filter>
+    </ClInclude>
+    <ClInclude Include="InheritanceAccess\AbstractSample.h">
+      <Filter>InheritanceAccess</Filter>
+    </ClInclude>
+    <ClInclude Include="InheritanceAccess\Base.h">
+      <Filter>InheritanceAccess</Filter>
+    </ClInclude>
+    <ClInclude Include="InheritanceAccess\DestruktorOrder.h">
+      <Filter>InheritanceAccess</Filter>
+    </ClInclude>
+    <ClInclude Include="InheritanceAccess\FinalSample.h">
+      <Filter>InheritanceAccess</Filter>
+    </ClInclude>
+    <ClInclude Include="InheritanceAccess\InheritanceConcept.h">
+      <Filter>InheritanceAccess</Filter>
+    </ClInclude>
+    <ClInclude Include="InheritanceAccess\MultipleInheritance.h">
+      <Filter>InheritanceAccess</Filter>
+    </ClInclude>
+    <ClInclude Include="InheritanceAccess\PrivateDerived.h">
+      <Filter>InheritanceAccess</Filter>
+    </ClInclude>
+    <ClInclude Include="InheritanceAccess\ProtectedDerived.h">
+      <Filter>InheritanceAccess</Filter>
+    </ClInclude>
+    <ClInclude Include="InheritanceAccess\PublicDerived.h">
+      <Filter>InheritanceAccess</Filter>
+    </ClInclude>
+    <ClInclude Include="LabSamples\Point.h">
+      <Filter>LabSamples%28main%29</Filter>
+    </ClInclude>
+    <ClInclude Include="LivingWorld\Animal.h">
+      <Filter>LivingWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="LivingWorld\Organism.h">
+      <Filter>LivingWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="LivingWorld\Plant.h">
+      <Filter>LivingWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="LivingWorld\Position.h">
+      <Filter>LivingWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="LivingWorld\World.h">
+      <Filter>LivingWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="RecursionTiming\Factorial.h">
+      <Filter>RecursionTiming</Filter>
+    </ClInclude>
+    <ClInclude Include="RecursionTiming\Fibonacci.h">
+      <Filter>RecursionTiming</Filter>
+    </ClInclude>
+    <ClInclude Include="RecursionTiming\Sums.h">
+      <Filter>RecursionTiming</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleClass\HeapAndStack.h">
+      <Filter>SimpleClass</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleClass\Product.h">
+      <Filter>SimpleClass</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleClass\Samochod.h">
+      <Filter>SimpleClass</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleClass\ShallowCopy.h">
+      <Filter>SimpleClass</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleClass\ZaprzyjaznionyWarsztat.h">
+      <Filter>SimpleClass</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="InheritanceAccess\InheritanceAccess.cpp">
+      <Filter>InheritanceAccess</Filter>
+    </ClCompile>
+    <ClCompile Include="LabSamples\LabSamples.cpp">
+      <Filter>LabSamples%28main%29</Filter>
+    </ClCompile>
+    <ClCompile Include="LivingWorld\Animal.cpp">
+      <Filter>LivingWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="LivingWorld\LivingWorld.cpp">
+      <Filter>LivingWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="LivingWorld\Organism.cpp">
+      <Filter>LivingWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="LivingWorld\Plant.cpp">
+      <Filter>LivingWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="LivingWorld\Position.cpp">
+      <Filter>LivingWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="LivingWorld\World.cpp">
+      <Filter>LivingWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="RecursionTiming\Factorial.cpp">
+      <Filter>RecursionTiming</Filter>
+    </ClCompile>
+    <ClCompile Include="RecursionTiming\Fibonacci.cpp">
+      <Filter>RecursionTiming</Filter>
+    </ClCompile>
+    <ClCompile Include="RecursionTiming\RecursionTiming.cpp">
+      <Filter>RecursionTiming</Filter>
+    </ClCompile>
+    <ClCompile Include="RecursionTiming\Sum.cpp">
+      <Filter>RecursionTiming</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleClass\HeapAndStack.cpp">
+      <Filter>SimpleClass</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleClass\Product.cpp">
+      <Filter>SimpleClass</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleClass\SimpleClass.cpp">
+      <Filter>SimpleClass</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LivingWorld\world.bin">
+      <Filter>LivingWorld</Filter>
+    </None>
+  </ItemGroup>
+</Project>
