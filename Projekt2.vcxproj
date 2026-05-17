@@ -104,6 +104,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>../pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -118,6 +120,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>../pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -127,50 +131,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="InheritanceAccess\AbstractSample.h" />
-    <ClInclude Include="InheritanceAccess\Base.h" />
-    <ClInclude Include="InheritanceAccess\DestruktorOrder.h" />
-    <ClInclude Include="InheritanceAccess\FinalSample.h" />
-    <ClInclude Include="InheritanceAccess\InheritanceConcept.h" />
-    <ClInclude Include="InheritanceAccess\MultipleInheritance.h" />
-    <ClInclude Include="InheritanceAccess\PrivateDerived.h" />
-    <ClInclude Include="InheritanceAccess\ProtectedDerived.h" />
-    <ClInclude Include="InheritanceAccess\PublicDerived.h" />
-    <ClInclude Include="InheritanceAccess\VirtualMethodSample.h" />
-    <ClInclude Include="LabSamples\Point.h" />
     <ClInclude Include="LivingWorld\Animal.h" />
     <ClInclude Include="LivingWorld\Organism.h" />
     <ClInclude Include="LivingWorld\Plant.h" />
     <ClInclude Include="LivingWorld\Position.h" />
     <ClInclude Include="LivingWorld\World.h" />
-    <ClInclude Include="RecursionTiming\Factorial.h" />
-    <ClInclude Include="RecursionTiming\Fibonacci.h" />
-    <ClInclude Include="RecursionTiming\Sums.h" />
-    <ClInclude Include="SimpleClass\HeapAndStack.h" />
-    <ClInclude Include="SimpleClass\Product.h" />
-    <ClInclude Include="SimpleClass\Samochod.h" />
-    <ClInclude Include="SimpleClass\ShallowCopy.h" />
-    <ClInclude Include="SimpleClass\ZaprzyjaznionyWarsztat.h" />
+    <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="InheritanceAccess\InheritanceAccess.cpp" />
-    <ClCompile Include="LabSamples\LabSamples.cpp" />
     <ClCompile Include="LivingWorld\Animal.cpp" />
     <ClCompile Include="LivingWorld\LivingWorld.cpp" />
     <ClCompile Include="LivingWorld\Organism.cpp" />
     <ClCompile Include="LivingWorld\Plant.cpp" />
     <ClCompile Include="LivingWorld\Position.cpp" />
     <ClCompile Include="LivingWorld\World.cpp" />
-    <ClCompile Include="RecursionTiming\Factorial.cpp" />
-    <ClCompile Include="RecursionTiming\Fibonacci.cpp" />
-    <ClCompile Include="RecursionTiming\RecursionTiming.cpp" />
-    <ClCompile Include="RecursionTiming\Sum.cpp" />
-    <ClCompile Include="SimpleClass\HeapAndStack.cpp" />
-    <ClCompile Include="SimpleClass\Product.cpp" />
-    <ClCompile Include="SimpleClass\SimpleClass.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="LivingWorld\world.bin" />
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
+    </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

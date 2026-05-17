@@ -4,18 +4,16 @@
 #include <ctime>
 #include "Organism.h"
 
-using namespace std;
-
 class World
 {
 private:
 	int worldX;
 	int worldY;
 	int turn = 0;
-	vector<Organism> organisms;
+	std::vector<Organism> organisms;
 	char separator = '.';
 
-	string getOrganismFromPosition(int x, int y);
+	char getOrganismFromPosition(int x, int y);
 	bool isPositionOnWorld(int x, int y);
 	bool isPositionFree(Position position);
 
@@ -31,13 +29,13 @@ public:
 	int getTurn();
 	
 	void addOrganism(Organism *organism);
-	vector<Position> getVectorOfFreePositionsAround(Position position);
+	std::vector<Position> getVectorOfFreePositionsAround(Position position);
 	void makeTurn();
 
-	void writeWorld(string fileName);
-	void readWorld(string fileName);
+	void writeWorld(std::string fileName);
+	void readWorld(std::string fileName);
 	
-	string toString();
+	std::string toString();
 
 };
 

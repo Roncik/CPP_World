@@ -1,11 +1,9 @@
-#include <iostream>
+#include "../pch.h"
 #include "Position.h"
 #include "Organism.h"
 #include "Plant.h"
 #include "Animal.h"
 #include "World.h"
-
-using namespace std;
 
 int main()
 {
@@ -36,14 +34,14 @@ int main()
 	Plant plant2;
 	Animal animal2;
 
-	cout << plant.toString() << endl;
-	cout << animal.toString() << endl;
-	cout << plant2.toString() << endl;
-	cout << animal2.toString() << endl;
+	std::cout << plant.toString() << std::endl;
+	std::cout << animal.toString() << std::endl;
+	std::cout << plant2.toString() << std::endl;
+	std::cout << animal2.toString() << std::endl;
 	plant.move(3, 4);
-	cout << plant.toString() << endl;
+	std::cout << plant.toString() << std::endl;
 	animal.move(1, 2);
-	cout << animal.toString() << endl;
+	std::cout << animal.toString() << std::endl;
 	
 	// World test
 	World world;
@@ -65,28 +63,28 @@ int main()
 	auto positions = world.getVectorOfFreePositionsAround(Position(5, 5));
 
 	for(auto pos: positions)
-		cout << pos.toString() << endl;
+		std::cout << pos.toString() << std::endl;
 
 	// Tura 0
-	cout << world.toString() << endl;
+	std::cout << world.toString() << std::endl;
 
 	// Tura 1
 	world.makeTurn();
-	cout << world.toString() << endl;
+	std::cout << world.toString() << std::endl;
 
 	// Tura 2
 	world.makeTurn();
-	cout << world.toString() << endl;
+	std::cout << world.toString() << std::endl;
 
 	world.writeWorld("world.bin");
 
 	// Tura 3
 	world.makeTurn();
-	cout << world.toString() << endl;
+	std::cout << world.toString() << std::endl;
 
 	// powrot do Tury 2
 	world.readWorld("world.bin");
-	cout << world.toString() << endl;
+	std::cout << world.toString() << std::endl;
 
 	return 0;
 }

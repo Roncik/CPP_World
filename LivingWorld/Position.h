@@ -1,7 +1,4 @@
 #pragma once
-#include <string>
-
-using namespace std;
 
 class Position {
 private:
@@ -17,7 +14,7 @@ public:
 	int getY();
 	void setY(int y);
 
-	string toString();
+	std::string toString();
 
 	double distance(Position position);
 	void move(int dx, int dy);

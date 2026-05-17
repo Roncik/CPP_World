@@ -1,3 +1,4 @@
+#include "../pch.h"
 #include "Position.h"
 
 
@@ -33,9 +34,9 @@ void Position::setY(int y)
 		this->y = 0;
 }
 
-string Position::toString()
+std::string Position::toString()
 {
-	return "(" + to_string(getX()) + ", " + to_string(getY()) + ")";
+	return "(" + std::to_string(getX()) + ", " + std::to_string(getY()) + ")";
 }
 
 double Position::distance(Position position)

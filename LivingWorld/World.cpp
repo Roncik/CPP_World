@@ -1,12 +1,12 @@
+#include "../pch.h"
 #include "World.h"
-#include <fstream>
 
-string World::getOrganismFromPosition(int x, int y)
+char World::getOrganismFromPosition(int x, int y)
 {	
 	for (Organism org : organisms)
 		if (org.getPosition().getX() == x && org.getPosition().getY() == y)
-			return org.getSpecies();
-	return "";
+			return org.getSign();
+	return 0;
 }
 
 bool World::isPositionOnWorld(int x, int y)
@@ -15,20 +15,20 @@ bool World::isPositionOnWorld(int x, int y)
 }
 
 bool World::isPositionFree(Position position) {
-	return this->getOrganismFromPosition(position.getX(), position.getY()).empty();
+	return this->getOrganismFromPosition(position.getX(), position.getY());
 }
 
-vector<Position> World::getVectorOfFreePositionsAround(Position position)
+std::vector<Position> World::getVectorOfFreePositionsAround(Position position)
 {	
 	int pos_x = position.getX(), pos_y = position.getY();
-	vector<Position> result;
+	std::vector<Position> result;
 	for(int x = -1; x < 2; ++x)
 		for (int y = -1; y < 2; ++y)
 			if ((x != 0 || y != 0) && 
 				isPositionOnWorld(pos_x + x, pos_y + y)) {
 				result.push_back(Position(pos_x + x, pos_y + y));
 			}
-	auto iter = remove_if(result.begin(), result.end(),
+	auto iter = std::remove_if(result.begin(), result.end(),
 		[this](Position pos) {return !isPositionFree(pos); });
 	result.erase(iter, result.end());
 
@@ -73,11 +73,11 @@ void World::addOrganism(Organism* organism)
 
 void World::makeTurn()
 {
-	vector<Position> newPositions;
-	int numberOfNewPositions;
+	std::vector<Position> newPositions;
+	size_t numberOfNewPositions;
 	int randomIndex;
 
-	srand(time(0));
+	srand(static_cast<unsigned int>(time(0)));
 	for (auto& org : organisms) {
 		newPositions = getVectorOfFreePositionsAround(org.getPosition());
 		numberOfNewPositions = newPositions.size();
@@ -89,17 +89,17 @@ void World::makeTurn()
 	turn++;
 }
 
-void World::writeWorld(string fileName)
+void World::writeWorld(std::string fileName)
 {
-	fstream my_file;
-	my_file.open(fileName, ios::out | ios::binary);
+	std::fstream my_file;
+	my_file.open(fileName, std::ios::out | std::ios::binary);
 	if (my_file.is_open()) {
 		my_file.write((char*)&this->worldX, sizeof(int));
 		my_file.write((char*)&this->worldY, sizeof(int));
 		my_file.write((char*)&this->turn, sizeof(int));
-		int orgs_size = this->organisms.size();
+		size_t orgs_size = this->organisms.size();
 		my_file.write((char*)&orgs_size, sizeof(int));
-		for (int i = 0; i < orgs_size; i++) {
+		for (size_t i = 0; i < orgs_size; i++) {
 			int data;
 			data = this->organisms[i].getPower();
 			my_file.write((char*)&data, sizeof(int));
@@ -107,19 +107,17 @@ void World::writeWorld(string fileName)
 			my_file.write((char*)&data, sizeof(int));
 			data = this->organisms[i].getPosition().getY();
 			my_file.write((char*)&data, sizeof(int));
-			string s_data = this->organisms[i].getSpecies();
-			int s_size = s_data.size();
-			my_file.write((char*)&s_size, sizeof(int));
-			my_file.write(s_data.data(), s_data.size());
+			char s_data = this->organisms[i].getSign();
+			my_file.write((char*)&s_data, sizeof(char));
 		}
 		my_file.close();
 	}
 }
 
-void World::readWorld(string fileName)
+void World::readWorld(std::string fileName)
 {
-	fstream my_file;
-	my_file.open(fileName, ios::in | ios::binary);
+	std::fstream my_file;
+	my_file.open(fileName, std::ios::in | std::ios::binary);
 	if (my_file.is_open()) {
 		int result;
 		my_file.read((char*)&result, sizeof(int));
@@ -130,7 +128,7 @@ void World::readWorld(string fileName)
 		this->turn = (int)result;
 		my_file.read((char*)&result, sizeof(int));
 		int orgs_size = (int)result;
-		vector<Organism> new_organisms;
+		std::vector<Organism> new_organisms;
 		for (int i = 0; i < orgs_size; i++) {
 			int power;
 			my_file.read((char*)&result, sizeof(int));
@@ -148,12 +146,12 @@ void World::readWorld(string fileName)
 			my_file.read((char*)&result, sizeof(int));
 			s_size = (int)result;
 
-			string species;
+			std::string species;
 			species.resize(s_size);
 			my_file.read((char*)&species[0], s_size);
 			
 			Organism org(power, pos);
-			org.setSpecies(species);
+			org.setSign(species);
 			new_organisms.push_back(org);
 		}
 		this->organisms = new_organisms;
@@ -161,10 +159,10 @@ void World::readWorld(string fileName)
 	}
 }
 
-string World::toString()
+std::string World::toString()
 {
-	string result = "\nturn: " + to_string(getTurn()) + "\n";
-	string spec;
+	std::string result = "\nturn: " + std::to_string(getTurn()) + "\n";
+	std::string spec;
 
 	for (int wY = 0; wY < getWorldY(); ++wY) {
 		for (int wX = 0; wX < getWorldX(); ++wX) {

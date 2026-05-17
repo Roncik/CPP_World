@@ -1,11 +1,5 @@
+#include "../pch.h"
 #include "Organism.h"
-
-Organism::Organism(int power, Position position)
-{
-	setPower(power);
-	setPosition(position);
-	setSpecies("O");
-}
 
 int Organism::getPower()
 {
@@ -27,10 +21,10 @@ void Organism::setPosition(Position position)
 	this->position = position;
 }
 
-string Organism::toString()
+std::string Organism::toString()
 {
-	return "{ species: " + this->getSpecies() + 
-		", power: " + to_string(getPower()) + 
+	return "{ species: " + std::to_string(this->getSign()) + 
+		", power: " + std::to_string(getPower()) +
 		", position: " + getPosition().toString() + "}";
 }
 
@@ -39,12 +33,22 @@ void Organism::move(int dx, int dy)
 	position.move(dx, dy);
 }
 
-string Organism::getSpecies()
+char Organism::getSign()
 {
-	return this->species;
+	return this->sign;
 }
 
-void Organism::setSpecies(string spec)
+void Organism::setSign(char spec)
 {
-	this->species = spec;
+	this->sign = spec;
+}
+
+std::vector<std::pair<int, int>> Organism::getHistory()
+{
+	return this->family_history;
+}
+
+void Organism::setHistory(std::vector<std::pair<int, int>> newHistory)
+{
+	this->family_history = newHistory;
 }
