@@ -20,10 +20,21 @@ public:
 	//W jakim celu definiować konstruktory i destruktory skoro nie zarządzamy ręcznie żadnymi zasobami(gotowe kontenery robią to za nas)?
 	//W tym przypadku ma zastosowanie zasada zera(Rule of zero) ponieważ nie zarządzamy ręcznie żadnymi zasobami na stercie.
 
-	int getPower();
-	void setPower(int power);
 	Position getPosition();
 	void setPosition(Position position);
+
+	int getPower();
+	void setPower(int power);
+
+	int getInitiative();
+	void setInitiative(int initiative);
+
+	int getLiveLength();
+	void setLiveLength(int liveLength);
+
+	int getPowerToReproduce();
+	void setPowerToReproduce(int powerToReproduce);
+	
 	char getSign();
 	void setSign(char spec);
 	std::vector<std::pair<int, int>> getHistory();
@@ -31,6 +42,7 @@ public:
 
 	virtual std::string toString();
 
-	virtual void move(int dx, int dy);
+	void move(int dx, int dy);
 
+	virtual Organism* reproduce(Position position);
 };

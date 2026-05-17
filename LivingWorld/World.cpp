@@ -1,4 +1,4 @@
-#include "../pch.h"
+﻿#include "../pch.h"
 #include "World.h"
 
 char World::getOrganismFromPosition(int x, int y)
@@ -28,8 +28,7 @@ std::vector<Position> World::getVectorOfFreePositionsAround(Position position)
 				isPositionOnWorld(pos_x + x, pos_y + y)) {
 				result.push_back(Position(pos_x + x, pos_y + y));
 			}
-	auto iter = std::remove_if(result.begin(), result.end(),
-		[this](Position pos) {return !isPositionFree(pos); });
+	auto iter = std::remove_if(result.begin(), result.end(),[this](Position pos) {return !isPositionFree(pos); });
 	result.erase(iter, result.end());
 
 	return result;
@@ -71,21 +70,56 @@ void World::addOrganism(Organism* organism)
 	this->organisms.push_back(*organism);
 }
 
+void World::removeOrganism(size_t index)
+{
+	this->organisms.erase(this->organisms.begin() + index);
+}
+
 void World::makeTurn()
 {
-	std::vector<Position> newPositions;
-	size_t numberOfNewPositions;
-	int randomIndex;
-
 	srand(static_cast<unsigned int>(time(0)));
-	for (auto& org : organisms) {
-		newPositions = getVectorOfFreePositionsAround(org.getPosition());
-		numberOfNewPositions = newPositions.size();
-		if (numberOfNewPositions > 0) {
-			randomIndex = rand() % numberOfNewPositions;
+
+	//sortowanie organizmów przez liveLength malejąco, aby uzyskać odpowiednią kolejność w turach
+	std::sort(organisms.begin(), organisms.end(), [](Organism& first, Organism& second) -> bool { return second.getInitiative() < first.getInitiative(); });
+
+	//liveLength loop
+	for (size_t i = 0; i < organisms.size(); ++i)
+	{
+		Organism& currentOrganism = organisms[i];
+
+		if (!currentOrganism.getLiveLength())
+			removeOrganism(i);
+	}
+
+	//Move loop
+	for (auto& org : organisms) 
+	{
+		std::vector<Position> newPositions = getVectorOfFreePositionsAround(org.getPosition());
+		size_t numberOfNewPositions = newPositions.size();
+		if (numberOfNewPositions > 0) 
+		{
+			int randomIndex = rand() % numberOfNewPositions;
 			org.setPosition(newPositions[randomIndex]);
 		}
 	}
+
+	//power loop
+	static_assert(false, "need to finish this");
+	for (auto& org : organisms)
+	{
+		if (org.getPower() >= org.getPowerToReproduce())
+		{
+			std::vector<Position> possiblePositions = getVectorOfFreePositionsAround(org.getPosition());
+			size_t numberOfPositions = possiblePositions.size();
+			if (numberOfPositions > 0)
+			{
+				int randomIndex = rand() % numberOfPositions;
+				org.setPosition(newPositions[randomIndex]);
+			}
+		}
+	}
+
+
 	turn++;
 }
 
@@ -116,6 +150,8 @@ void World::writeWorld(std::string fileName)
 
 void World::readWorld(std::string fileName)
 {
+	assert(false && "need to fix this function");
+	
 	std::fstream my_file;
 	my_file.open(fileName, std::ios::in | std::ios::binary);
 	if (my_file.is_open()) {
@@ -150,9 +186,9 @@ void World::readWorld(std::string fileName)
 			species.resize(s_size);
 			my_file.read((char*)&species[0], s_size);
 			
-			Organism org(power, pos);
+			/*Organism org(power, pos);
 			org.setSign(species);
-			new_organisms.push_back(org);
+			new_organisms.push_back(org);*/
 		}
 		this->organisms = new_organisms;
 		my_file.close();

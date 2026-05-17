@@ -11,6 +11,36 @@ void Organism::setPower(int power)
 	this->power = power;
 }
 
+int Organism::getInitiative()
+{
+	return this->initiative;
+}
+
+void Organism::setInitiative(int initiative)
+{
+	this->initiative = initiative;
+}
+
+int Organism::getLiveLength()
+{
+	return this->liveLength;
+}
+
+void Organism::setLiveLength(int liveLength)
+{
+	this->liveLength = liveLength;
+}
+
+int Organism::getPowerToReproduce()
+{
+	return this->powerToReproduce;
+}
+
+void Organism::setPowerToReproduce(int powerToReproduce)
+{
+	this->powerToReproduce = powerToReproduce;
+}
+
 Position Organism::getPosition()
 {
 	return this->position;

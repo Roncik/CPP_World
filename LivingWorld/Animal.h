@@ -4,8 +4,7 @@
 class Animal : public Organism
 {
 public:
-	Animal(int power, Position position);
-	Animal();
-
+	Animal() = default;
+	Animal* reproduce(Position position);
 };
 

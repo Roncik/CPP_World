@@ -1,10 +1,9 @@
 #include "../pch.h"
 #include "Plant.h"
 
-
-void Plant::move(int dx, int dy)
+Plant* Plant::reproduce(Position position)
 {
-	Organism::move(0, 0);
+	Plant* newPlant = new Plant();
+	newPlant->setPosition(position);
+	return newPlant;
 }
-
-

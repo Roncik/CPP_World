@@ -29,6 +29,7 @@ public:
 	int getTurn();
 	
 	void addOrganism(Organism *organism);
+	void removeOrganism(size_t index);
 	std::vector<Position> getVectorOfFreePositionsAround(Position position);
 	void makeTurn();
 
