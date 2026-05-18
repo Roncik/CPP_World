@@ -41,6 +41,19 @@ void Organism::setPowerToReproduce(int powerToReproduce)
 	this->powerToReproduce = powerToReproduce;
 }
 
+Organism::Organism(Organism* other)
+{
+	static_assert(false, "I should implement a factory for organisms instead of this");
+	
+	this->setHistory(other->getHistory());
+	this->setInitiative(other->getInitiative());
+	this->setLiveLength(other->getLiveLength());
+	this->setPosition(other->getPosition());
+	this->setPower(other->getPower());
+	this->setPowerToReproduce(other->getPowerToReproduce());
+	this->setSign(other->getSign());
+}
+
 Position Organism::getPosition()
 {
 	return this->position;
@@ -55,7 +68,7 @@ std::string Organism::toString()
 {
 	return "{ species: " + std::to_string(this->getSign()) + 
 		", power: " + std::to_string(getPower()) +
-		", position: " + getPosition().toString() + "}";
+			", position: " + getPosition().toString() + "}";
 }
 
 void Organism::move(int dx, int dy)

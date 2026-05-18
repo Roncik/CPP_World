@@ -17,6 +17,7 @@ protected:
 
 public:
 	Organism() : position(0, 0) {};
+	Organism(Organism* other);
 	//W jakim celu definiować konstruktory i destruktory skoro nie zarządzamy ręcznie żadnymi zasobami(gotowe kontenery robią to za nas)?
 	//W tym przypadku ma zastosowanie zasada zera(Rule of zero) ponieważ nie zarządzamy ręcznie żadnymi zasobami na stercie.
 
@@ -44,5 +45,6 @@ public:
 
 	void move(int dx, int dy);
 
+	static_assert(false, "I should implement a factory for organisms instead of this");
 	virtual Organism* reproduce(Position position);
 };

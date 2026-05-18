@@ -67,7 +67,7 @@ int World::getTurn()
 
 void World::addOrganism(Organism* organism)
 {
-	this->organisms.push_back(*organism);
+	this->organisms.push_back(*organism); //push_back tworzy kopie którą potem wrzuca na koniec listy, emplace_back przesuwa obiekt do listy bez tworzenia kopii.
 }
 
 void World::removeOrganism(size_t index)
@@ -103,18 +103,22 @@ void World::makeTurn()
 		}
 	}
 
-	//power loop
-	static_assert(false, "need to finish this");
+	//power loop(reproduction)
 	for (auto& org : organisms)
 	{
 		if (org.getPower() >= org.getPowerToReproduce())
 		{
+			org.setPower(org.getPower() - org.getPowerToReproduce());
+			
+			
 			std::vector<Position> possiblePositions = getVectorOfFreePositionsAround(org.getPosition());
 			size_t numberOfPositions = possiblePositions.size();
 			if (numberOfPositions > 0)
 			{
 				int randomIndex = rand() % numberOfPositions;
-				org.setPosition(newPositions[randomIndex]);
+				auto newOrganism = org.reproduce(possiblePositions[randomIndex]);
+				addOrganism(newOrganism);
+				delete newOrganism;
 			}
 		}
 	}
