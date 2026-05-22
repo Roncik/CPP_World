@@ -5,8 +5,8 @@
 Organism* World::getOrganismFromPosition(int x, int y)
 {	
 	for (auto& org : organisms)
-		if (org.getPosition().getX() == x && org.getPosition().getY() == y)
-			return &org;
+		if (org->getPosition().getX() == x && org->getPosition().getY() == y)
+			return org.get();
 	return 0;
 }
 
@@ -66,9 +66,9 @@ int World::getTurn()
 	return this->turn;
 }
 
-void World::addOrganism(Organism* organism)
+void World::addOrganism(std::unique_ptr<Organism>& organism)
 {
-	this->organisms.push_back(*organism); //push_back tworzy kopie którą potem wrzuca na koniec listy, emplace_back przesuwa obiekt do listy bez tworzenia kopii.
+	this->organisms.push_back(std::move(organism));
 }
 
 void World::removeOrganism(size_t index)
@@ -86,9 +86,9 @@ void World::makeTurn()
 	//Remove organisms with no liveLength left loop
 	for (size_t i = 0; i < organisms.size(); ++i)
 	{
-		Organism& currentOrganism = organisms[i];
+		auto& currentOrganism = organisms[i];
 
-		if (!currentOrganism.getLiveLength())
+		if (!currentOrganism->getLiveLength())
 		{
 			removeOrganism(i);
 			--i;
@@ -111,33 +111,33 @@ void World::makeTurn()
 		- jesli animal to moze zabic pobliski organizm i wejsc na jego miejsce(lub zginac w walce)
 		- jesli plant to nie przemieszcza sie
 		*/
-		std::vector<Position> newPositions = getVectorOfFreePositionsAround(org.getPosition());
+		std::vector<Position> newPositions = getVectorOfFreePositionsAround(org->getPosition());
 		size_t numberOfNewPositions = newPositions.size();
 		if (numberOfNewPositions > 0) 
 		{
 			int randomIndex = rand() % numberOfNewPositions;
-			org.setPosition(newPositions[randomIndex]);
+			org->setPosition(newPositions[randomIndex]);
 		}
 	}
 
 	//power loop(reproduction)
 	for (auto& org : organisms)
 	{
-		if (org.getPower() >= org.getPowerToReproduce())
+		if (org->getPower() >= org->getPowerToReproduce())
 		{
-			org.setPower(org.getPower() - org.getPowerToReproduce());
+			org->setPower(org->getPower() - org->getPowerToReproduce());
 			
 			
-			std::vector<Position> possiblePositions = getVectorOfFreePositionsAround(org.getPosition());
+			std::vector<Position> possiblePositions = getVectorOfFreePositionsAround(org->getPosition());
 			size_t numberOfPositions = possiblePositions.size();
 			if (numberOfPositions > 0)
 			{
 				int randomIndex = rand() % numberOfPositions;
 
-				auto newOrganism = OrganismFactoryRegistry::getFactory(org.getSign()).get()->create();
+				std::unique_ptr<Organism> newOrganism = OrganismFactoryRegistry::getFactory(org->getSign()).get()->create();
 				newOrganism.get()->setPosition(possiblePositions[randomIndex]);
 
-				addOrganism(newOrganism.get());
+				addOrganism(newOrganism);
 			}
 		}
 	}
@@ -157,13 +157,13 @@ void World::writeWorld(std::string fileName)
 		my_file.write((char*)&orgs_size, sizeof(int));
 		for (size_t i = 0; i < orgs_size; i++) {
 			int data;
-			data = this->organisms[i].getPower();
+			data = this->organisms[i]->getPower();
 			my_file.write((char*)&data, sizeof(int));
-			data = this->organisms[i].getPosition().getX();
+			data = this->organisms[i]->getPosition().getX();
 			my_file.write((char*)&data, sizeof(int));
-			data = this->organisms[i].getPosition().getY();
+			data = this->organisms[i]->getPosition().getY();
 			my_file.write((char*)&data, sizeof(int));
-			char s_data = this->organisms[i].getSign();
+			char s_data = this->organisms[i]->getSign();
 			my_file.write((char*)&s_data, sizeof(char));
 		}
 		my_file.close();
@@ -212,7 +212,7 @@ void World::readWorld(std::string fileName)
 			org.setSign(species);
 			new_organisms.push_back(org);*/
 		}
-		this->organisms = new_organisms;
+		//this->organisms = new_organisms;
 		my_file.close();
 	}
 }

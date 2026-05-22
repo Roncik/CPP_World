@@ -34,14 +34,14 @@ int main()
 	animal4.setLiveLength(7);
 
 
-	world.addOrganism(&plant1);
+	/*world.addOrganism(&plant1);
 	world.addOrganism(&animal1);
 	world.addOrganism(&plant2);
 	world.addOrganism(&animal2);
 	world.addOrganism(&plant3);
 	world.addOrganism(&animal3);
 	world.addOrganism(&plant4);
-	world.addOrganism(&animal4);
+	world.addOrganism(&animal4);*/
 
 	world.makeTurn();
 	

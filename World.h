@@ -10,7 +10,7 @@ private:
 	int worldX;
 	int worldY;
 	int turn = 0;
-	std::vector<Organism> organisms;
+	std::vector<std::unique_ptr<Organism>> organisms;
 	char separator = '.';
 
 	Organism* getOrganismFromPosition(int x, int y);
@@ -28,7 +28,7 @@ public:
 
 	int getTurn();
 	
-	void addOrganism(Organism *organism);
+	void addOrganism(std::unique_ptr<Organism>& organism);
 	void removeOrganism(size_t index);
 	std::vector<Position> getVectorOfFreePositionsAround(Position position);
 	void makeTurn();
