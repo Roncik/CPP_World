@@ -9,15 +9,27 @@ private:
 
 protected:
 	// Parametry organizmu - ustawia je organizm indywidualnie
-	int power{ 0 };
-	int initiative{ 0 };
-	int liveLength{ 0 };
-	int powerToReproduce{ 0 };
-	char sign{ 'O' };
+	int power;
+	int initiative;
+	int liveLength;
+	int powerToReproduce;
+	char sign;
+
+	//power = 3
+	//powerToReproduce = 6
+	//liveLength = 3
 
 public:
-	Organism() : position(0, 0) {};
-	Organism(Organism* other);
+	Organism(int power, int initiative, int liveLength, int powerToReproduce, char sign, Position position = Position(0, 0)) : power{ power }, 
+		initiative{ initiative }, liveLength{ liveLength }, powerToReproduce{ powerToReproduce }, sign{ sign }, position{ 0, 0 } 
+	{ 
+		// jesli domyslne powerToReproduce - power jest wiekszy niz liveLength to organizm nigdy nie bedzie mogl sie reprodukowac
+		assert(powerToReproduce - power <= liveLength && "niepoprawne parametry organizmu");
+	}
+	Organism(char sign) : Organism(0, 0, 0, 0, sign) {} //constructor delegation
+	Organism() : Organism('O') {} //constructor delegation
+	virtual ~Organism() = default;
+
 	//W jakim celu definiować konstruktory i destruktory skoro nie zarządzamy ręcznie żadnymi zasobami(gotowe kontenery robią to za nas)?
 	//W tym przypadku ma zastosowanie zasada zera(Rule of zero) ponieważ nie zarządzamy ręcznie żadnymi zasobami na stercie.
 
@@ -44,7 +56,4 @@ public:
 	virtual std::string toString();
 
 	void move(int dx, int dy);
-
-	static_assert(false, "I should implement a factory for organisms instead of this");
-	virtual Organism* reproduce(Position position);
 };

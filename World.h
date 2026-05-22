@@ -13,7 +13,7 @@ private:
 	std::vector<Organism> organisms;
 	char separator = '.';
 
-	char getOrganismFromPosition(int x, int y);
+	Organism* getOrganismFromPosition(int x, int y);
 	bool isPositionOnWorld(int x, int y);
 	bool isPositionFree(Position position);
 

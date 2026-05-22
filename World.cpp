@@ -1,11 +1,12 @@
-﻿#include "../pch.h"
+﻿#include "pch.h"
 #include "World.h"
+#include "OrganismFactoryRegistry.h"
 
-char World::getOrganismFromPosition(int x, int y)
+Organism* World::getOrganismFromPosition(int x, int y)
 {	
-	for (Organism org : organisms)
+	for (auto& org : organisms)
 		if (org.getPosition().getX() == x && org.getPosition().getY() == y)
-			return org.getSign();
+			return &org;
 	return 0;
 }
 
@@ -15,7 +16,7 @@ bool World::isPositionOnWorld(int x, int y)
 }
 
 bool World::isPositionFree(Position position) {
-	return this->getOrganismFromPosition(position.getX(), position.getY());
+	return !this->getOrganismFromPosition(position.getX(), position.getY());
 }
 
 std::vector<Position> World::getVectorOfFreePositionsAround(Position position)
@@ -24,8 +25,8 @@ std::vector<Position> World::getVectorOfFreePositionsAround(Position position)
 	std::vector<Position> result;
 	for(int x = -1; x < 2; ++x)
 		for (int y = -1; y < 2; ++y)
-			if ((x != 0 || y != 0) && 
-				isPositionOnWorld(pos_x + x, pos_y + y)) {
+			if ((x != 0 || y != 0) && isPositionOnWorld(pos_x + x, pos_y + y)) 
+			{
 				result.push_back(Position(pos_x + x, pos_y + y));
 			}
 	auto iter = std::remove_if(result.begin(), result.end(),[this](Position pos) {return !isPositionFree(pos); });
@@ -82,18 +83,34 @@ void World::makeTurn()
 	//sortowanie organizmów przez liveLength malejąco, aby uzyskać odpowiednią kolejność w turach
 	std::sort(organisms.begin(), organisms.end(), [](Organism& first, Organism& second) -> bool { return second.getInitiative() < first.getInitiative(); });
 
-	//liveLength loop
+	//Remove organisms with no liveLength left loop
 	for (size_t i = 0; i < organisms.size(); ++i)
 	{
 		Organism& currentOrganism = organisms[i];
 
 		if (!currentOrganism.getLiveLength())
+		{
 			removeOrganism(i);
+			--i;
+		}
 	}
+
+	//Increment power and decrement liveLength loop
+	std::for_each(organisms.begin(), organisms.end(), [](Organism& organism)
+		{ 
+			organism.setPower(organism.getPower() + 1); 
+			organism.setLiveLength(organism.getLiveLength() - 1);
+		});
 
 	//Move loop
 	for (auto& org : organisms) 
 	{
+		static_assert(false);
+		/*
+		Tutaj powinienem zaimplementowac logike: 
+		- jesli animal to moze zabic pobliski organizm i wejsc na jego miejsce(lub zginac w walce)
+		- jesli plant to nie przemieszcza sie
+		*/
 		std::vector<Position> newPositions = getVectorOfFreePositionsAround(org.getPosition());
 		size_t numberOfNewPositions = newPositions.size();
 		if (numberOfNewPositions > 0) 
@@ -116,15 +133,16 @@ void World::makeTurn()
 			if (numberOfPositions > 0)
 			{
 				int randomIndex = rand() % numberOfPositions;
-				auto newOrganism = org.reproduce(possiblePositions[randomIndex]);
-				addOrganism(newOrganism);
-				delete newOrganism;
+
+				auto newOrganism = OrganismFactoryRegistry::getFactory(org.getSign()).get()->create();
+				newOrganism.get()->setPosition(possiblePositions[randomIndex]);
+
+				addOrganism(newOrganism.get());
 			}
 		}
 	}
 
-
-	turn++;
+	++turn;
 }
 
 void World::writeWorld(std::string fileName)
@@ -202,13 +220,14 @@ void World::readWorld(std::string fileName)
 std::string World::toString()
 {
 	std::string result = "\nturn: " + std::to_string(getTurn()) + "\n";
-	std::string spec;
 
 	for (int wY = 0; wY < getWorldY(); ++wY) {
 		for (int wX = 0; wX < getWorldX(); ++wX) {
-			spec = getOrganismFromPosition(wX, wY);
-			if (spec != "")
-				result += spec;
+			char sign{ 0 };
+			if (auto org = getOrganismFromPosition(wX, wY); org)
+				sign = org->getSign();
+			if (sign)
+				result += sign;
 			else
 				result += separator;
 		};

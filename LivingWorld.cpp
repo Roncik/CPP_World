@@ -1,4 +1,4 @@
-#include "../pch.h"
+#include "pch.h"
 #include "Position.h"
 #include "Organism.h"
 #include "Plant.h"
@@ -25,8 +25,14 @@ int main()
 
 	Plant plant4;
 	plant4.setInitiative(1);
+
+
 	Animal animal4;
 	animal4.setInitiative(3);
+	animal4.setPowerToReproduce(4);
+	animal4.setPower(4);
+	animal4.setLiveLength(7);
+
 
 	world.addOrganism(&plant1);
 	world.addOrganism(&animal1);

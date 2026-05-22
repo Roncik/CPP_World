@@ -1,4 +1,4 @@
-#include "../pch.h"
+#include "pch.h"
 #include "Organism.h"
 
 int Organism::getPower()
@@ -39,19 +39,6 @@ int Organism::getPowerToReproduce()
 void Organism::setPowerToReproduce(int powerToReproduce)
 {
 	this->powerToReproduce = powerToReproduce;
-}
-
-Organism::Organism(Organism* other)
-{
-	static_assert(false, "I should implement a factory for organisms instead of this");
-	
-	this->setHistory(other->getHistory());
-	this->setInitiative(other->getInitiative());
-	this->setLiveLength(other->getLiveLength());
-	this->setPosition(other->getPosition());
-	this->setPower(other->getPower());
-	this->setPowerToReproduce(other->getPowerToReproduce());
-	this->setSign(other->getSign());
 }
 
 Position Organism::getPosition()
