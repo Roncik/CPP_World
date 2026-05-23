@@ -8,31 +8,14 @@
 int main()
 {
 	World world;
-	Plant plant1;
-	plant1.setInitiative(5);
-	Animal animal1;
-	animal1.setInitiative(10);
-
-	Plant plant2;
-	plant2.setInitiative(6);
-	Animal animal2;
-	animal2.setInitiative(2);
-
-	Plant plant3;
-	plant3.setInitiative(4);
-	Animal animal3;
-	animal3.setInitiative(8);
-
-	Plant plant4;
-	plant4.setInitiative(1);
 
 
-	Animal animal4;
-	animal4.setInitiative(3);
-	animal4.setPowerToReproduce(4);
-	animal4.setPower(4);
-	animal4.setLiveLength(7);
-
+	std::unique_ptr<Organism> animal4 = std::make_unique<Animal>();
+	animal4->setInitiative(3);
+	animal4->setPowerToReproduce(4);
+	animal4->setPower(4);
+	animal4->setLiveLength(7);
+	world.addOrganism(animal4);
 
 	/*world.addOrganism(&plant1);
 	world.addOrganism(&animal1);

@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "World.h"
 #include "OrganismFactoryRegistry.h"
+#include "Animal.h"
 
 Organism* World::getOrganismFromPosition(int x, int y)
 {	
@@ -19,7 +20,7 @@ bool World::isPositionFree(Position position) {
 	return !this->getOrganismFromPosition(position.getX(), position.getY());
 }
 
-std::vector<Position> World::getVectorOfFreePositionsAround(Position position)
+std::vector<Position> World::getVectorOfPositionsAround(Position position, bool onlyFreePositions)
 {	
 	int pos_x = position.getX(), pos_y = position.getY();
 	std::vector<Position> result;
@@ -29,8 +30,12 @@ std::vector<Position> World::getVectorOfFreePositionsAround(Position position)
 			{
 				result.push_back(Position(pos_x + x, pos_y + y));
 			}
-	auto iter = std::remove_if(result.begin(), result.end(),[this](Position pos) {return !isPositionFree(pos); });
-	result.erase(iter, result.end());
+
+	if (onlyFreePositions)
+	{
+		auto iter = std::remove_if(result.begin(), result.end(), [this](Position pos) { return !isPositionFree(pos); });
+		result.erase(iter, result.end());
+	}
 
 	return result;
 }
@@ -80,8 +85,8 @@ void World::makeTurn()
 {
 	srand(static_cast<unsigned int>(time(0)));
 
-	//sortowanie organizmów przez liveLength malejąco, aby uzyskać odpowiednią kolejność w turach
-	std::sort(organisms.begin(), organisms.end(), [](Organism& first, Organism& second) -> bool { return second.getInitiative() < first.getInitiative(); });
+	//sortowanie organizmów przez initiative malejąco, aby uzyskać odpowiednią kolejność w turach
+	std::sort(organisms.begin(), organisms.end(), [](auto& first, auto& second) -> bool { return second->getInitiative() < first->getInitiative(); });
 
 	//Remove organisms with no liveLength left loop
 	for (size_t i = 0; i < organisms.size(); ++i)
@@ -96,22 +101,50 @@ void World::makeTurn()
 	}
 
 	//Increment power and decrement liveLength loop
-	std::for_each(organisms.begin(), organisms.end(), [](Organism& organism)
+	std::for_each(organisms.begin(), organisms.end(), [](auto& organism)
 		{ 
-			organism.setPower(organism.getPower() + 1); 
-			organism.setLiveLength(organism.getLiveLength() - 1);
+			organism->setPower(organism->getPower() + 1);
+			organism->setLiveLength(organism->getLiveLength() - 1);
 		});
 
 	//Move loop
-	for (auto& org : organisms) 
+	for (size_t i = 0; i < organisms.size(); ++i)
 	{
-		static_assert(false);
+		auto& org = organisms[i];
+		
+		bool isAnimal = org->getIsAnimal();
+		bool isCarnivore{};
+		if (isAnimal)
+			isCarnivore = reinterpret_cast<Animal*>(org.get())->getIsCarnivore(); //tutaj jest niebezpieczny downcast, mimo ze wiem ze obiekt jest Animal
+
 		/*
-		Tutaj powinienem zaimplementowac logike: 
-		- jesli animal to moze zabic pobliski organizm i wejsc na jego miejsce(lub zginac w walce)
+		Tutaj powinienem zaimplementowac logike:
+		- jesli animal i carnivore to moze zabic pobliski animal i wejsc na jego miejsce(power zwieksza sie o power zabitego animal)
+		- jesli animal i herbivore to moze zjesc pobliski plant i wejsc na jego miejsce(power zwieksza sie o power zjedzonego plant)
 		- jesli plant to nie przemieszcza sie
+		- jesli animal nie ma gdzie sie przemiescic - umiera
 		*/
-		std::vector<Position> newPositions = getVectorOfFreePositionsAround(org->getPosition());
+
+		if (isAnimal && isCarnivore)
+		{
+			static_assert(false && "Need to refactor this - function for handling move");
+			if (auto availablePositions = getVectorOfPositionsAround(org->getPosition()); availablePositions.size())
+			{
+				Position chosenPosition = availablePositions[rand() % availablePositions.size()];
+				if (auto nearbyOrganism = getOrganismFromPosition(chosenPosition.getX(), chosenPosition.getY()); nearbyOrganism)
+				{
+					bool isNearbyOrganismAnimal = nearbyOrganism->getIsAnimal();
+					if (isNearbyOrganismAnimal);
+				}
+				else
+					org->setPosition(chosenPosition);
+			}
+			else
+				removeOrganism(i);
+		}
+
+
+		std::vector<Position> newPositions = getVectorOfPositionsAround(org->getPosition());
 		size_t numberOfNewPositions = newPositions.size();
 		if (numberOfNewPositions > 0) 
 		{
@@ -125,17 +158,17 @@ void World::makeTurn()
 	{
 		if (org->getPower() >= org->getPowerToReproduce())
 		{
-			org->setPower(org->getPower() - org->getPowerToReproduce());
+			org->setPower(org->getPower() - org->getPowerToReproduce()); // zmiejsz power o zuzyte na reprodukcje
 			
 			
-			std::vector<Position> possiblePositions = getVectorOfFreePositionsAround(org->getPosition());
+			std::vector<Position> possiblePositions = getVectorOfPositionsAround(org->getPosition(), true);
 			size_t numberOfPositions = possiblePositions.size();
 			if (numberOfPositions > 0)
 			{
 				int randomIndex = rand() % numberOfPositions;
 
-				std::unique_ptr<Organism> newOrganism = OrganismFactoryRegistry::getFactory(org->getSign()).get()->create();
-				newOrganism.get()->setPosition(possiblePositions[randomIndex]);
+				std::unique_ptr<Organism> newOrganism = OrganismFactoryRegistry::getFactory(org->getSign())->create();
+				newOrganism->setPosition(possiblePositions[randomIndex]);
 
 				addOrganism(newOrganism);
 			}

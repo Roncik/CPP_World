@@ -29,8 +29,9 @@ public:
 	int getTurn();
 	
 	void addOrganism(std::unique_ptr<Organism>& organism);
+
 	void removeOrganism(size_t index);
-	std::vector<Position> getVectorOfFreePositionsAround(Position position);
+	std::vector<Position> getVectorOfPositionsAround(Position position, bool onlyFreePositions = false);
 	void makeTurn();
 
 	void writeWorld(std::string fileName);

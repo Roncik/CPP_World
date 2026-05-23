@@ -14,6 +14,7 @@ protected:
 	int liveLength;
 	int powerToReproduce;
 	char sign;
+	bool isAnimal{ false };
 
 	//power = 3
 	//powerToReproduce = 6
@@ -50,10 +51,14 @@ public:
 	
 	char getSign();
 	void setSign(char spec);
+
+	bool getIsAnimal();
+	void setIsAnimal(bool isAnimal);
+
 	std::vector<std::pair<int, int>> getHistory();
 	void setHistory(std::vector<std::pair<int, int>> newHistory);
 
-	virtual std::string toString();
-
 	void move(int dx, int dy);
+
+	virtual std::string toString();
 };

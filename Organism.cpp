@@ -73,6 +73,16 @@ void Organism::setSign(char spec)
 	this->sign = spec;
 }
 
+bool Organism::getIsAnimal()
+{
+	return this->isAnimal;
+}
+
+void Organism::setIsAnimal(bool isAnimal)
+{
+	this->isAnimal = isAnimal;
+}
+
 std::vector<std::pair<int, int>> Organism::getHistory()
 {
 	return this->family_history;
