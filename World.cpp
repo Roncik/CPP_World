@@ -3,12 +3,18 @@
 #include "OrganismFactoryRegistry.h"
 #include "Animal.h"
 
-Organism* World::getOrganismFromPosition(int x, int y)
+bool World::getOrganismFromPosition(int x, int y, size_t& index)
 {	
-	for (auto& org : organisms)
+	for (size_t i = 0; i < organisms.size(); ++i)
+	{
+		auto& org = organisms[i];
 		if (org->getPosition().getX() == x && org->getPosition().getY() == y)
-			return org.get();
-	return 0;
+		{
+			index = i;
+			return true;
+		}
+	}
+	return false;
 }
 
 bool World::isPositionOnWorld(int x, int y)
@@ -113,44 +119,11 @@ void World::makeTurn()
 		auto& org = organisms[i];
 		
 		bool isAnimal = org->getIsAnimal();
-		bool isCarnivore{};
+		bool isCarnivore{ false };
 		if (isAnimal)
 			isCarnivore = reinterpret_cast<Animal*>(org.get())->getIsCarnivore(); //tutaj jest niebezpieczny downcast, mimo ze wiem ze obiekt jest Animal
 
-		/*
-		Tutaj powinienem zaimplementowac logike:
-		- jesli animal i carnivore to moze zabic pobliski animal i wejsc na jego miejsce(power zwieksza sie o power zabitego animal)
-		- jesli animal i herbivore to moze zjesc pobliski plant i wejsc na jego miejsce(power zwieksza sie o power zjedzonego plant)
-		- jesli plant to nie przemieszcza sie
-		- jesli animal nie ma gdzie sie przemiescic - umiera
-		*/
-
-		if (isAnimal && isCarnivore)
-		{
-			static_assert(false && "Need to refactor this - function for handling move");
-			if (auto availablePositions = getVectorOfPositionsAround(org->getPosition()); availablePositions.size())
-			{
-				Position chosenPosition = availablePositions[rand() % availablePositions.size()];
-				if (auto nearbyOrganism = getOrganismFromPosition(chosenPosition.getX(), chosenPosition.getY()); nearbyOrganism)
-				{
-					bool isNearbyOrganismAnimal = nearbyOrganism->getIsAnimal();
-					if (isNearbyOrganismAnimal);
-				}
-				else
-					org->setPosition(chosenPosition);
-			}
-			else
-				removeOrganism(i);
-		}
-
-
-		std::vector<Position> newPositions = getVectorOfPositionsAround(org->getPosition());
-		size_t numberOfNewPositions = newPositions.size();
-		if (numberOfNewPositions > 0) 
-		{
-			int randomIndex = rand() % numberOfNewPositions;
-			org->setPosition(newPositions[randomIndex]);
-		}
+		handleMove(i, isAnimal, isCarnivore);
 	}
 
 	//power loop(reproduction)
@@ -247,6 +220,98 @@ void World::readWorld(std::string fileName)
 		}
 		//this->organisms = new_organisms;
 		my_file.close();
+	}
+}
+
+void World::handleMove(size_t& orgIndex, bool isAnimal, bool isCarnivore)
+{
+	if (!isAnimal)
+		return;
+
+	auto& org = organisms[orgIndex];
+
+	/*
+	- jesli animal i carnivore to moze zabic pobliski animal i wejsc na jego miejsce(power zwieksza sie o power zabitego animal)
+	- jesli animal i herbivore to moze zjesc pobliski plant i wejsc na jego miejsce(power zwieksza sie o power zjedzonego plant)
+	- jesli plant to nie przemieszcza sie
+	- jesli animal nie ma gdzie sie przemiescic - umiera
+	*/
+
+	auto availablePositions = getVectorOfPositionsAround(org->getPosition());
+
+	if (!availablePositions.size())
+	{
+		removeOrganism(orgIndex);
+		--orgIndex;
+		return;
+	}
+
+	Position& chosenPosition = availablePositions[rand() % availablePositions.size()];
+	size_t nearbyOrganismId;
+
+	if (!getOrganismFromPosition(chosenPosition.getX(), chosenPosition.getY(), nearbyOrganismId))
+	{
+		org->setPosition(chosenPosition);
+		return;
+	}
+
+	auto& nearbyOrganism = organisms[nearbyOrganismId];
+	bool isNearbyOrganismAnimal = nearbyOrganism->getIsAnimal();
+
+	if (!isNearbyOrganismAnimal)
+	{
+		// step over nearby plant and kill it
+		if (!isCarnivore)
+			org->setPower(org->getPower() + nearbyOrganism->getPower());
+
+		removeOrganism(nearbyOrganismId);
+		if (nearbyOrganismId < orgIndex) // jesli usuwany organizm mial indeks nizszy niz obecny, trzeba naprawic indeks
+			--orgIndex;
+
+		org->setPosition(chosenPosition);
+		return;
+	}
+
+	// fight nearby animal
+	if (org->getInitiative() > nearbyOrganism->getInitiative())
+	{
+		//scenario 1 - current animal has higher initiative than the attacked one - current animal wins
+		if (isCarnivore)
+			org->setPower(org->getPower() + nearbyOrganism->getPower());
+		removeOrganism(nearbyOrganismId);
+		if (nearbyOrganismId < orgIndex) // jesli usuwany organizm mial indeks nizszy niz obecny, trzeba naprawic indeks
+			--orgIndex;
+		org->setPosition(chosenPosition);
+		return;
+	}
+	else if (org->getInitiative() == nearbyOrganism->getInitiative())
+	{
+		//scenario 2 - current animal has equal initiative to the attacked one - the result is randomized
+		bool result = rand() % 2; // if result is true the current animal wins
+		if (result)
+		{
+			if (isCarnivore)
+				org->setPower(org->getPower() + nearbyOrganism->getPower());
+			removeOrganism(nearbyOrganismId);
+			if (nearbyOrganismId < orgIndex) // jesli usuwany organizm mial indeks nizszy niz obecny, trzeba naprawic indeks
+				--orgIndex;
+			org->setPosition(chosenPosition);
+			return;
+		}
+		else
+		{
+			// if the nearby animal won, it should only get the power if it was a carnivore(herbivores can't eat other animals)
+			bool isNearbyOrganismCarnivore = reinterpret_cast<Animal*>(nearbyOrganism.get())->getIsCarnivore();
+			if (isNearbyOrganismCarnivore)
+				nearbyOrganism->setPower(nearbyOrganism->getPower() + org->getPower());
+			removeOrganism(orgIndex);
+			--orgIndex;
+			return;
+		}
+	}
+	else
+	{
+		throw std::logic_error("unhandled case");
 	}
 }
 

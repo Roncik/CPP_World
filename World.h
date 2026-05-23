@@ -13,7 +13,7 @@ private:
 	std::vector<std::unique_ptr<Organism>> organisms;
 	char separator = '.';
 
-	Organism* getOrganismFromPosition(int x, int y);
+	bool getOrganismFromPosition(int x, int y, size_t& index);
 	bool isPositionOnWorld(int x, int y);
 	bool isPositionFree(Position position);
 
@@ -36,6 +36,8 @@ public:
 
 	void writeWorld(std::string fileName);
 	void readWorld(std::string fileName);
+
+	void handleMove(size_t& orgIndex, bool isAnimal, bool isCarnivore);
 	
 	std::string toString();
 
