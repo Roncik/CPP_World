@@ -9,11 +9,11 @@ class World
 private:
 	int worldX;
 	int worldY;
-	int turn = 0;
+	int turn{ 0 };
 	std::vector<std::unique_ptr<Organism>> organisms;
-	char separator = '.';
+	char separator{ '.' };
 
-	bool getOrganismFromPosition(int x, int y, size_t& index);
+	bool getOrganismFromPosition(int x, int y, size_t* index = nullptr);
 	bool isPositionOnWorld(int x, int y);
 	bool isPositionFree(Position position);
 

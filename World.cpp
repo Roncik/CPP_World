@@ -3,14 +3,15 @@
 #include "OrganismFactoryRegistry.h"
 #include "Animal.h"
 
-bool World::getOrganismFromPosition(int x, int y, size_t& index)
+bool World::getOrganismFromPosition(int x, int y, size_t* index)
 {	
 	for (size_t i = 0; i < organisms.size(); ++i)
 	{
 		auto& org = organisms[i];
 		if (org->getPosition().getX() == x && org->getPosition().getY() == y)
 		{
-			index = i;
+			if (index)
+				*index = i;
 			return true;
 		}
 	}
@@ -121,7 +122,7 @@ void World::makeTurn()
 		bool isAnimal = org->getIsAnimal();
 		bool isCarnivore{ false };
 		if (isAnimal)
-			isCarnivore = reinterpret_cast<Animal*>(org.get())->getIsCarnivore(); //tutaj jest niebezpieczny downcast, mimo ze wiem ze obiekt jest Animal
+			isCarnivore = dynamic_cast<Animal*>(org.get())->getIsCarnivore(); //tutaj jest niebezpieczny downcast, mimo ze wiem ze obiekt jest Animal
 
 		handleMove(i, isAnimal, isCarnivore);
 	}
@@ -249,7 +250,7 @@ void World::handleMove(size_t& orgIndex, bool isAnimal, bool isCarnivore)
 	Position& chosenPosition = availablePositions[rand() % availablePositions.size()];
 	size_t nearbyOrganismId;
 
-	if (!getOrganismFromPosition(chosenPosition.getX(), chosenPosition.getY(), nearbyOrganismId))
+	if (!getOrganismFromPosition(chosenPosition.getX(), chosenPosition.getY(), &nearbyOrganismId))
 	{
 		org->setPosition(chosenPosition);
 		return;
@@ -301,7 +302,7 @@ void World::handleMove(size_t& orgIndex, bool isAnimal, bool isCarnivore)
 		else
 		{
 			// if the nearby animal won, it should only get the power if it was a carnivore(herbivores can't eat other animals)
-			bool isNearbyOrganismCarnivore = reinterpret_cast<Animal*>(nearbyOrganism.get())->getIsCarnivore();
+			bool isNearbyOrganismCarnivore = dynamic_cast<Animal*>(nearbyOrganism.get())->getIsCarnivore();
 			if (isNearbyOrganismCarnivore)
 				nearbyOrganism->setPower(nearbyOrganism->getPower() + org->getPower());
 			removeOrganism(orgIndex);
@@ -322,9 +323,10 @@ std::string World::toString()
 	for (int wY = 0; wY < getWorldY(); ++wY) {
 		for (int wX = 0; wX < getWorldX(); ++wX) {
 			char sign{ 0 };
-			if (auto org = getOrganismFromPosition(wX, wY); org)
-				sign = org->getSign();
-			if (sign)
+			size_t id{};
+			if (getOrganismFromPosition(wX, wY, &id))
+				sign = organisms[id]->getSign();
+			if (sign) 
 				result += sign;
 			else
 				result += separator;

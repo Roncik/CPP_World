@@ -22,7 +22,7 @@ protected:
 
 public:
 	Organism(int power, int initiative, int liveLength, int powerToReproduce, char sign, Position position = Position(0, 0)) : power{ power }, 
-		initiative{ initiative }, liveLength{ liveLength }, powerToReproduce{ powerToReproduce }, sign{ sign }, position{ 0, 0 } 
+		initiative{ initiative }, liveLength{ liveLength }, powerToReproduce{ powerToReproduce }, sign{ sign }, position{ position }
 	{ 
 		// jesli domyslne powerToReproduce - power jest wiekszy niz liveLength to organizm nigdy nie bedzie mogl sie reprodukowac
 		assert(powerToReproduce - power <= liveLength && "niepoprawne parametry organizmu");

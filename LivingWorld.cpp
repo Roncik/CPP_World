@@ -4,29 +4,45 @@
 #include "Plant.h"
 #include "Animal.h"
 #include "World.h"
+#include "Grass.h"
+#include "Sheep.h"
+#include "Dandelion.h"
+#include "Wolf.h"
+
+using org = std::unique_ptr<Organism>;
 
 int main()
 {
 	World world;
 
+	org grass = std::make_unique<Grass>();
+	grass->setPosition(Position(0, 0));
 
-	std::unique_ptr<Organism> animal4 = std::make_unique<Animal>();
-	animal4->setInitiative(3);
-	animal4->setPowerToReproduce(4);
-	animal4->setPower(4);
-	animal4->setLiveLength(7);
-	world.addOrganism(animal4);
+	org sheep = std::make_unique<Sheep>();
+	sheep->setPosition(Position(1, 1));
 
-	/*world.addOrganism(&plant1);
-	world.addOrganism(&animal1);
-	world.addOrganism(&plant2);
-	world.addOrganism(&animal2);
-	world.addOrganism(&plant3);
-	world.addOrganism(&animal3);
-	world.addOrganism(&plant4);
-	world.addOrganism(&animal4);*/
+	org dandelion = std::make_unique<Dandelion>();
+	dandelion->setPosition(Position(2, 2));
 
+	org wolf = std::make_unique<Wolf>();
+	wolf->setPosition(Position(3, 3));
+
+	world.addOrganism(grass);
+	world.addOrganism(sheep);
+	world.addOrganism(dandelion);
+	world.addOrganism(wolf);
+
+
+	// Tura 0
+	std::cout << world.toString() << std::endl;
+
+	// Tura 1
 	world.makeTurn();
+	std::cout << world.toString() << std::endl;
+
+	// Tura 2
+	world.makeTurn();
+	std::cout << world.toString() << std::endl;
 	
 	
 	

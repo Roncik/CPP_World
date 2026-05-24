@@ -46,6 +46,30 @@
     <Filter Include="OrganismFactoryRegistry">
       <UniqueIdentifier>{9b4d8fd4-273e-4e8e-8da3-e4485c211f37}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Grass">
+      <UniqueIdentifier>{ee3e94cf-46fd-45aa-b302-c0ef6f46b7f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sheep">
+      <UniqueIdentifier>{54353a0a-8c64-4a96-a4ba-31f00bab46ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dandelion">
+      <UniqueIdentifier>{3ea05cf8-d139-4205-96e4-5588ec47589d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Wolf">
+      <UniqueIdentifier>{e5de8d46-0686-44b1-ac9d-2a51a2a634e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GrassFactory">
+      <UniqueIdentifier>{795d9353-0301-4e4a-b250-5c72c9b298aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SheepFactory">
+      <UniqueIdentifier>{3f61fc7b-5988-4086-9874-fc61cc4bf7b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DandelionFactory">
+      <UniqueIdentifier>{863722bf-be4f-43d0-b100-31612ac81809}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WolfFactory">
+      <UniqueIdentifier>{325baef2-51ac-4200-821c-4e8bcc33e680}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -77,6 +101,30 @@
     </ClInclude>
     <ClInclude Include="OrganismFactoryRegistry.h">
       <Filter>OrganismFactoryRegistry</Filter>
+    </ClInclude>
+    <ClInclude Include="Grass.h">
+      <Filter>Grass</Filter>
+    </ClInclude>
+    <ClInclude Include="Sheep.h">
+      <Filter>Sheep</Filter>
+    </ClInclude>
+    <ClInclude Include="Dandelion.h">
+      <Filter>Dandelion</Filter>
+    </ClInclude>
+    <ClInclude Include="GrassFactory.h">
+      <Filter>GrassFactory</Filter>
+    </ClInclude>
+    <ClInclude Include="SheepFactory.h">
+      <Filter>SheepFactory</Filter>
+    </ClInclude>
+    <ClInclude Include="DandelionFactory.h">
+      <Filter>DandelionFactory</Filter>
+    </ClInclude>
+    <ClInclude Include="WolfFactory.h">
+      <Filter>WolfFactory</Filter>
+    </ClInclude>
+    <ClInclude Include="Wolf.h">
+      <Filter>Wolf</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -112,6 +160,30 @@
     </ClCompile>
     <ClCompile Include="OrganismFactoryRegistry.cpp">
       <Filter>OrganismFactoryRegistry</Filter>
+    </ClCompile>
+    <ClCompile Include="Grass.cpp">
+      <Filter>Grass</Filter>
+    </ClCompile>
+    <ClCompile Include="Sheep.cpp">
+      <Filter>Sheep</Filter>
+    </ClCompile>
+    <ClCompile Include="Dandelion.cpp">
+      <Filter>Dandelion</Filter>
+    </ClCompile>
+    <ClCompile Include="GrassFactory.cpp">
+      <Filter>GrassFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="SheepFactory.cpp">
+      <Filter>SheepFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="DandelionFactory.cpp">
+      <Filter>DandelionFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="WolfFactory.cpp">
+      <Filter>WolfFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="Wolf.cpp">
+      <Filter>Wolf</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
