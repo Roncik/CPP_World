@@ -70,6 +70,12 @@
     <Filter Include="WolfFactory">
       <UniqueIdentifier>{325baef2-51ac-4200-821c-4e8bcc33e680}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Toadstool">
+      <UniqueIdentifier>{e47eefc1-e274-464b-9739-8b3c84494061}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ToadstoolFactory">
+      <UniqueIdentifier>{1808a380-6357-4480-b9db-96b5d72857ef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -125,6 +131,12 @@
     </ClInclude>
     <ClInclude Include="Wolf.h">
       <Filter>Wolf</Filter>
+    </ClInclude>
+    <ClInclude Include="Toadstool.h">
+      <Filter>Toadstool</Filter>
+    </ClInclude>
+    <ClInclude Include="ToadstoolFactory.h">
+      <Filter>ToadstoolFactory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +196,12 @@
     </ClCompile>
     <ClCompile Include="Wolf.cpp">
       <Filter>Wolf</Filter>
+    </ClCompile>
+    <ClCompile Include="Toadstool.cpp">
+      <Filter>Toadstool</Filter>
+    </ClCompile>
+    <ClCompile Include="ToadstoolFactory.cpp">
+      <Filter>ToadstoolFactory</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

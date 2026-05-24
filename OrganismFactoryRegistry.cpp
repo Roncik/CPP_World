@@ -6,6 +6,7 @@
 #include "SheepFactory.h"
 #include "DandelionFactory.h"
 #include "WolfFactory.h"
+#include "ToadstoolFactory.h"
 
 std::unique_ptr<OrganismFactory> OrganismFactoryRegistry::getFactory(char sign)
 {
@@ -22,6 +23,8 @@ std::unique_ptr<OrganismFactory> OrganismFactoryRegistry::getFactory(char sign)
         case 'D': return std::make_unique<DandelionFactory>(); //Dandelion
 
         case 'W': return std::make_unique<WolfFactory>(); //Wolf
+
+        case 'T': return std::make_unique<ToadstoolFactory>(); //Toadstool
 
         default: throw std::logic_error("Factory not found"); return nullptr;
     }

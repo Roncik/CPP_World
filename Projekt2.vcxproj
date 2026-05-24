@@ -148,6 +148,8 @@
     <ClInclude Include="Position.h" />
     <ClInclude Include="Sheep.h" />
     <ClInclude Include="SheepFactory.h" />
+    <ClInclude Include="Toadstool.h" />
+    <ClInclude Include="ToadstoolFactory.h" />
     <ClInclude Include="Wolf.h" />
     <ClInclude Include="WolfFactory.h" />
     <ClInclude Include="World.h" />
@@ -174,6 +176,8 @@
     <ClCompile Include="Position.cpp" />
     <ClCompile Include="Sheep.cpp" />
     <ClCompile Include="SheepFactory.cpp" />
+    <ClCompile Include="Toadstool.cpp" />
+    <ClCompile Include="ToadstoolFactory.cpp" />
     <ClCompile Include="Wolf.cpp" />
     <ClCompile Include="WolfFactory.cpp" />
     <ClCompile Include="World.cpp" />

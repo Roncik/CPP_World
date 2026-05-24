@@ -226,8 +226,15 @@ void World::readWorld(std::string fileName)
 
 void World::handleMove(size_t& orgIndex, bool isAnimal, bool isCarnivore)
 {
-	if (!isAnimal)
+	if (!isAnimal) // jesli roslina - nie rusza sie
 		return;
+
+	auto removeOrganismFixIndex = [&](size_t index) -> void
+		{
+			removeOrganism(index);
+			if (index <= orgIndex) // jesli usuwany organizm mial indeks nizszy lub rowny obecnemu, trzeba naprawic indeks
+				--orgIndex;
+		};
 
 	auto& org = organisms[orgIndex];
 
@@ -242,8 +249,7 @@ void World::handleMove(size_t& orgIndex, bool isAnimal, bool isCarnivore)
 
 	if (!availablePositions.size())
 	{
-		removeOrganism(orgIndex);
-		--orgIndex;
+		removeOrganismFixIndex(orgIndex);
 		return;
 	}
 
@@ -261,14 +267,18 @@ void World::handleMove(size_t& orgIndex, bool isAnimal, bool isCarnivore)
 
 	if (!isNearbyOrganismAnimal)
 	{
+		if (nearbyOrganism->getSign() == 'T') // jesli plant to muchomor, animal i muchomor umiera
+		{
+			removeOrganismFixIndex(orgIndex);
+			removeOrganismFixIndex(nearbyOrganismId);
+			return;
+		}
+
 		// step over nearby plant and kill it
 		if (!isCarnivore)
 			org->setPower(org->getPower() + nearbyOrganism->getPower());
 
-		removeOrganism(nearbyOrganismId);
-		if (nearbyOrganismId < orgIndex) // jesli usuwany organizm mial indeks nizszy niz obecny, trzeba naprawic indeks
-			--orgIndex;
-
+		removeOrganismFixIndex(nearbyOrganismId);
 		org->setPosition(chosenPosition);
 		return;
 	}
@@ -279,9 +289,9 @@ void World::handleMove(size_t& orgIndex, bool isAnimal, bool isCarnivore)
 		//scenario 1 - current animal has higher initiative than the attacked one - current animal wins
 		if (isCarnivore)
 			org->setPower(org->getPower() + nearbyOrganism->getPower());
-		removeOrganism(nearbyOrganismId);
-		if (nearbyOrganismId < orgIndex) // jesli usuwany organizm mial indeks nizszy niz obecny, trzeba naprawic indeks
-			--orgIndex;
+
+		removeOrganismFixIndex(nearbyOrganismId);
+
 		org->setPosition(chosenPosition);
 		return;
 	}
@@ -293,9 +303,9 @@ void World::handleMove(size_t& orgIndex, bool isAnimal, bool isCarnivore)
 		{
 			if (isCarnivore)
 				org->setPower(org->getPower() + nearbyOrganism->getPower());
-			removeOrganism(nearbyOrganismId);
-			if (nearbyOrganismId < orgIndex) // jesli usuwany organizm mial indeks nizszy niz obecny, trzeba naprawic indeks
-				--orgIndex;
+
+			removeOrganismFixIndex(nearbyOrganismId);
+
 			org->setPosition(chosenPosition);
 			return;
 		}
@@ -305,8 +315,9 @@ void World::handleMove(size_t& orgIndex, bool isAnimal, bool isCarnivore)
 			bool isNearbyOrganismCarnivore = dynamic_cast<Animal*>(nearbyOrganism.get())->getIsCarnivore();
 			if (isNearbyOrganismCarnivore)
 				nearbyOrganism->setPower(nearbyOrganism->getPower() + org->getPower());
-			removeOrganism(orgIndex);
-			--orgIndex;
+			
+			removeOrganismFixIndex(orgIndex);
+
 			return;
 		}
 	}
