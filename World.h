@@ -28,18 +28,18 @@ public:
 
 	int getTurn();
 	
-	void addOrganism(std::unique_ptr<Organism>& organism);
+	void addOrganism(std::unique_ptr<Organism>& organism, Organism* parentOrganism = nullptr);
 
 	void removeOrganism(size_t index);
 	std::vector<Position> getVectorOfPositionsAround(Position position, bool onlyFreePositions = false);
 	void makeTurn();
 
-	void writeWorld(std::string fileName);
-	void readWorld(std::string fileName);
-
 	void handleMove(size_t& orgIndex, bool isAnimal, bool isCarnivore);
 	
 	std::string toString();
 
+	//SERIALIZATION
+	void writeWorld(std::string fileName);
+	void readWorld(std::string fileName);
 };
 

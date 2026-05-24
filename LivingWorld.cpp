@@ -37,7 +37,7 @@ int main()
 	world.addOrganism(wolf);
 	world.addOrganism(toadstool);
 
-
+	world.writeWorld("world.bin");
 	// Tura 0
 	std::cout << world.toString() << '\n';
 

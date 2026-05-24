@@ -5,6 +5,8 @@ class Organism
 {
 private:
 	Position position;
+
+	static_assert(false, "jak zaimplementowac ta historie??");
 	std::vector<std::pair<int, int>> family_history{}; // historia to lista par; tur urodzin(1) i śmierci(2) przodków
 
 protected:

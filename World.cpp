@@ -78,8 +78,12 @@ int World::getTurn()
 	return this->turn;
 }
 
-void World::addOrganism(std::unique_ptr<Organism>& organism)
+void World::addOrganism(std::unique_ptr<Organism>& organism, Organism* parentOrganism)
 {
+	if (parentOrganism)
+	{
+		organism->setHistory(parentOrganism->getHistory());
+	}
 	this->organisms.push_back(std::move(organism));
 }
 
@@ -156,25 +160,28 @@ void World::writeWorld(std::string fileName)
 {
 	std::fstream my_file;
 	my_file.open(fileName, std::ios::out | std::ios::binary);
-	if (my_file.is_open()) {
-		my_file.write((char*)&this->worldX, sizeof(int));
-		my_file.write((char*)&this->worldY, sizeof(int));
-		my_file.write((char*)&this->turn, sizeof(int));
-		size_t orgs_size = this->organisms.size();
-		my_file.write((char*)&orgs_size, sizeof(int));
-		for (size_t i = 0; i < orgs_size; i++) {
-			int data;
-			data = this->organisms[i]->getPower();
-			my_file.write((char*)&data, sizeof(int));
-			data = this->organisms[i]->getPosition().getX();
-			my_file.write((char*)&data, sizeof(int));
-			data = this->organisms[i]->getPosition().getY();
-			my_file.write((char*)&data, sizeof(int));
-			char s_data = this->organisms[i]->getSign();
-			my_file.write((char*)&s_data, sizeof(char));
-		}
-		my_file.close();
+	if (!my_file.is_open())
+		return;
+
+	my_file.write((char*)&this->worldX, sizeof(int));
+	my_file.write((char*)&this->worldY, sizeof(int));
+	my_file.write((char*)&this->turn, sizeof(int));
+	size_t orgs_size = this->organisms.size();
+	my_file.write((char*)&orgs_size, sizeof(int));
+	for (size_t i = 0; i < orgs_size; ++i)
+	{
+		int data;
+		data = this->organisms[i]->getPower();
+		my_file.write((char*)&data, sizeof(int));
+		data = this->organisms[i]->getPosition().getX();
+		my_file.write((char*)&data, sizeof(int));
+		data = this->organisms[i]->getPosition().getY();
+		my_file.write((char*)&data, sizeof(int));
+		char s_data = this->organisms[i]->getSign();
+		my_file.write((char*)&s_data, sizeof(char));
 	}
+	my_file.close();
+
 }
 
 void World::readWorld(std::string fileName)
