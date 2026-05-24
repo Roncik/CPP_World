@@ -8,6 +8,7 @@
 #include "Sheep.h"
 #include "Dandelion.h"
 #include "Wolf.h"
+#include "Toadstool.h"
 
 using org = std::unique_ptr<Organism>;
 
@@ -27,22 +28,26 @@ int main()
 	org wolf = std::make_unique<Wolf>();
 	wolf->setPosition(Position(3, 3));
 
+	org toadstool = std::make_unique<Toadstool>();
+	toadstool->setPosition(Position(4, 4));
+
 	world.addOrganism(grass);
 	world.addOrganism(sheep);
 	world.addOrganism(dandelion);
 	world.addOrganism(wolf);
+	world.addOrganism(toadstool);
 
 
 	// Tura 0
-	std::cout << world.toString() << std::endl;
+	std::cout << world.toString() << '\n';
 
 	// Tura 1
 	world.makeTurn();
-	std::cout << world.toString() << std::endl;
+	std::cout << world.toString() << '\n';
 
 	// Tura 2
 	world.makeTurn();
-	std::cout << world.toString() << std::endl;
+	std::cout << world.toString() << '\n';
 	
 	
 	
