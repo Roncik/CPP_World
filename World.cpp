@@ -80,15 +80,12 @@ int World::getTurn()
 
 void World::addOrganism(std::unique_ptr<Organism>& organism, Organism* parentOrganism)
 {
-	if (parentOrganism)
-	{
-		organism->setHistory(parentOrganism->getHistory());
-	}
 	this->organisms.push_back(std::move(organism));
 }
 
 void World::removeOrganism(size_t index)
 {
+	this->organisms[index]->logDeathTurn(getTurn());
 	this->organisms.erase(this->organisms.begin() + index);
 }
 
@@ -132,8 +129,10 @@ void World::makeTurn()
 	}
 
 	//power loop(reproduction)
-	for (auto& org : organisms)
+	for (size_t i = 0; i < organisms.size(); ++i)
 	{
+		auto& org = organisms[i];
+		
 		if (org->getPower() >= org->getPowerToReproduce())
 		{
 			org->setPower(org->getPower() - org->getPowerToReproduce()); // zmiejsz power o zuzyte na reprodukcje
@@ -147,6 +146,7 @@ void World::makeTurn()
 
 				std::unique_ptr<Organism> newOrganism = OrganismFactoryRegistry::getFactory(org->getSign())->create();
 				newOrganism->setPosition(possiblePositions[randomIndex]);
+				newOrganism->initHistory(organisms[i].get(), getTurn() + 1); // tutaj numerTury + 1 bo licznik jest incrementowany na końcu makeTurn
 
 				addOrganism(newOrganism);
 			}
@@ -261,7 +261,7 @@ void World::handleMove(size_t& orgIndex, bool isAnimal, bool isCarnivore)
 	}
 
 	Position& chosenPosition = availablePositions[rand() % availablePositions.size()];
-	size_t nearbyOrganismId;
+	size_t nearbyOrganismId{ (0) };
 
 	if (!getOrganismFromPosition(chosenPosition.getX(), chosenPosition.getY(), &nearbyOrganismId))
 	{
@@ -276,8 +276,8 @@ void World::handleMove(size_t& orgIndex, bool isAnimal, bool isCarnivore)
 	{
 		if (nearbyOrganism->getSign() == 'T') // jesli plant to muchomor, animal i muchomor umiera
 		{
-			removeOrganismFixIndex(orgIndex);
 			removeOrganismFixIndex(nearbyOrganismId);
+			removeOrganismFixIndex(orgIndex);
 			return;
 		}
 
@@ -328,9 +328,16 @@ void World::handleMove(size_t& orgIndex, bool isAnimal, bool isCarnivore)
 			return;
 		}
 	}
-	else
+	else if (org->getInitiative() < nearbyOrganism->getInitiative())
 	{
-		throw std::logic_error("unhandled case");
+		//scenario 3 - current animal has smaller initiative to the attacked one - current animal dies
+		
+		bool isNearbyOrganismCarnivore = dynamic_cast<Animal*>(nearbyOrganism.get())->getIsCarnivore();
+		if (isNearbyOrganismCarnivore)
+			nearbyOrganism->setPower(nearbyOrganism->getPower() + org->getPower());
+
+		removeOrganismFixIndex(orgIndex);
+		return;
 	}
 }
 

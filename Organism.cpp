@@ -83,12 +83,29 @@ void Organism::setIsAnimal(bool isAnimal)
 	this->isAnimal = isAnimal;
 }
 
-std::vector<std::pair<int, int>> Organism::getHistory()
+void Organism::initHistory(Organism* parent, int turnNum)
 {
-	return this->family_history;
+	selfRecord = std::make_shared<std::pair<int, int>>();
+	selfRecord->first = turnNum;
+	selfRecord->second = -1; // -1 = organizm jeszcze zyje
+
+	if (parent)
+		familyHistory = parent->familyHistory;
+
+	familyHistory.push_back(selfRecord);
 }
 
-void Organism::setHistory(std::vector<std::pair<int, int>> newHistory)
+std::vector<std::shared_ptr<std::pair<int, int>>> Organism::getHistory()
 {
-	this->family_history = newHistory;
+	return this->familyHistory;
+}
+
+void Organism::setHistory(std::vector<std::shared_ptr<std::pair<int, int>>> newHistory)
+{
+	this->familyHistory = newHistory;
+}
+
+void Organism::logDeathTurn(int turnNum)
+{
+	selfRecord->second = turnNum;
 }

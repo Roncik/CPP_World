@@ -6,10 +6,12 @@ class Organism
 private:
 	Position position;
 
-	static_assert(false, "jak zaimplementowac ta historie??");
-	std::vector<std::pair<int, int>> family_history{}; // historia to lista par; tur urodzin(1) i śmierci(2) przodków
+	std::shared_ptr<std::pair<int, int>> selfRecord; // historia to lista par; tur urodzin(1) i śmierci(2) przodków
 
 protected:
+	std::vector<std::shared_ptr<std::pair<int, int>>> familyHistory{};
+
+
 	// Parametry organizmu - ustawia je organizm indywidualnie
 	int power;
 	int initiative;
@@ -28,6 +30,8 @@ public:
 	{ 
 		// jesli domyslne powerToReproduce - power jest wiekszy niz liveLength to organizm nigdy nie bedzie mogl sie reprodukowac
 		assert(powerToReproduce - power <= liveLength && "niepoprawne parametry organizmu");
+
+		initHistory();
 	}
 	Organism(char sign) : Organism(0, 0, 0, 0, sign) {} //constructor delegation
 	Organism() : Organism('O') {} //constructor delegation
@@ -57,8 +61,10 @@ public:
 	bool getIsAnimal();
 	void setIsAnimal(bool isAnimal);
 
-	std::vector<std::pair<int, int>> getHistory();
-	void setHistory(std::vector<std::pair<int, int>> newHistory);
+	void initHistory(Organism* parent = nullptr, int turnNum = 0);
+	std::vector<std::shared_ptr<std::pair<int, int>>> getHistory();
+	void setHistory(std::vector<std::shared_ptr<std::pair<int, int>>> newHistory);
+	void logDeathTurn(int turnNum);
 
 	void move(int dx, int dy);
 

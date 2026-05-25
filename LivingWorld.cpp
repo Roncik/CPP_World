@@ -31,11 +31,11 @@ int main()
 	org toadstool = std::make_unique<Toadstool>();
 	toadstool->setPosition(Position(4, 4));
 
-	world.addOrganism(grass);
-	world.addOrganism(sheep);
+	//world.addOrganism(grass);
+	//world.addOrganism(sheep);
 	world.addOrganism(dandelion);
-	world.addOrganism(wolf);
-	world.addOrganism(toadstool);
+	//world.addOrganism(wolf);
+	//world.addOrganism(toadstool);
 
 	world.writeWorld("world.bin");
 	// Tura 0
@@ -46,6 +46,26 @@ int main()
 	std::cout << world.toString() << '\n';
 
 	// Tura 2
+	world.makeTurn();
+	std::cout << world.toString() << '\n';
+
+	// Tura 3
+	world.makeTurn();
+	std::cout << world.toString() << '\n';
+
+	// Tura 4
+	world.makeTurn();
+	std::cout << world.toString() << '\n';
+
+	// Tura 5
+	world.makeTurn();
+	std::cout << world.toString() << '\n';
+
+	// Tura 6
+	world.makeTurn();
+	std::cout << world.toString() << '\n';
+
+	// Tura 7
 	world.makeTurn();
 	std::cout << world.toString() << '\n';
 	
