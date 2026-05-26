@@ -14,6 +14,7 @@ using org = std::unique_ptr<Organism>;
 
 int main()
 {
+	
 	World world;
 
 	org grass = std::make_unique<Grass>();
@@ -68,6 +69,8 @@ int main()
 	// Tura 7
 	world.makeTurn();
 	std::cout << world.toString() << '\n';
+
+	world.organisms.back()->serialize();
 	
 	
 	

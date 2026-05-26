@@ -10,7 +10,7 @@ private:
 	int worldX;
 	int worldY;
 	int turn{ 0 };
-	std::vector<std::unique_ptr<Organism>> organisms;
+	
 	char separator{ '.' };
 
 	bool getOrganismFromPosition(int x, int y, size_t* index = nullptr);
@@ -18,6 +18,7 @@ private:
 	bool isPositionFree(Position position);
 
 public:
+	std::vector<std::unique_ptr<Organism>> organisms;
 	World(int worldX, int worldY);
 	World() : World(6, 6) {};
 
@@ -28,7 +29,7 @@ public:
 
 	int getTurn();
 	
-	void addOrganism(std::unique_ptr<Organism>& organism, Organism* parentOrganism = nullptr);
+	void addOrganism(std::unique_ptr<Organism>& organism);
 
 	void removeOrganism(size_t index);
 	std::vector<Position> getVectorOfPositionsAround(Position position, bool onlyFreePositions = false);
@@ -39,6 +40,7 @@ public:
 	std::string toString();
 
 	//SERIALIZATION
+	std::string serialize();
 	void writeWorld(std::string fileName);
 	void readWorld(std::string fileName);
 };

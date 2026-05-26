@@ -6,10 +6,10 @@ class Organism
 private:
 	Position position;
 
-	std::shared_ptr<std::pair<int, int>> selfRecord; // historia to lista par; tur urodzin(1) i śmierci(2) przodków
+	std::shared_ptr<std::pair<int, int>> selfRecord;
 
 protected:
-	std::vector<std::shared_ptr<std::pair<int, int>>> familyHistory{};
+	std::vector<std::shared_ptr<std::pair<int, int>>> familyHistory{}; // historia to lista par; tur urodzin(1) i śmierci(2) przodków
 
 
 	// Parametry organizmu - ustawia je organizm indywidualnie
@@ -69,4 +69,6 @@ public:
 	void move(int dx, int dy);
 
 	virtual std::string toString();
+
+	virtual std::string serialize();
 };

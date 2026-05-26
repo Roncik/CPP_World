@@ -78,7 +78,7 @@ int World::getTurn()
 	return this->turn;
 }
 
-void World::addOrganism(std::unique_ptr<Organism>& organism, Organism* parentOrganism)
+void World::addOrganism(std::unique_ptr<Organism>& organism)
 {
 	this->organisms.push_back(std::move(organism));
 }
@@ -154,6 +154,20 @@ void World::makeTurn()
 	}
 
 	++turn;
+}
+
+std::string World::serialize()
+{
+	std::stringstream ss;
+	// tutaj trzeba uzyc write zeby zawsze zapisac odpowiednia ta sama ilosc bajtow - np worldX = 6 zapisze sie tylko jeden bajt przy <<
+	ss.write((char*)&this->worldX, sizeof(this->worldX));
+	ss.write((char*)&this->worldY, sizeof(this->worldY));
+	ss.write((char*)&this->turn, sizeof(this->turn));
+
+	auto organisms_size = this->organisms.size();
+	ss.write((char*)&organisms_size, sizeof(organisms_size));
+
+	return ss.str();
 }
 
 void World::writeWorld(std::string fileName)

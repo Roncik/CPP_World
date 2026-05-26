@@ -8,6 +8,7 @@
 #include <vector>
 #include <cassert>
 #include <algorithm>
+#include <sstream>
 
 #endif
 

@@ -109,3 +109,49 @@ void Organism::logDeathTurn(int turnNum)
 {
 	selfRecord->second = turnNum;
 }
+
+std::string Organism::serialize()
+{
+	std::stringstream ss;
+	// tutaj trzeba uzyc write zeby zawsze zapisac odpowiednia ta sama ilosc bajtow - np worldX = 6 zapisze sie tylko jeden bajt przy <<
+
+	//position
+	ss.write((char*)&this->position, sizeof(this->position));
+
+	//selfRecord
+	auto& selfrec = *selfRecord.get();
+	ss.write((char*)&selfrec, sizeof(selfrec));
+
+	//familyHistory
+	auto size = familyHistory.size();
+	ss.write((char*)&size, sizeof(size));
+	std::for_each(familyHistory.begin(), familyHistory.end(), [&](auto& cur)
+		{
+			auto& rec = *cur.get();
+			ss.write((char*)&rec, sizeof(rec));
+		});
+
+	//power
+	ss.write((char*)&this->power, sizeof(this->power));
+
+	//initiative
+	ss.write((char*)&this->initiative, sizeof(this->initiative));
+
+	//liveLength
+	ss.write((char*)&this->liveLength, sizeof(this->liveLength));
+
+	//powerToReproduce
+	ss.write((char*)&this->powerToReproduce, sizeof(this->powerToReproduce));
+
+	//sign
+	ss.write((char*)&this->sign, sizeof(this->sign));
+
+	//isAnimal
+	ss.write((char*)&this->isAnimal, sizeof(this->isAnimal));
+
+	//isCarnivore
+	bool isCarnivore{ false };
+	ss.write((char*)&isCarnivore, sizeof(isCarnivore));
+
+	return ss.str();
+}
