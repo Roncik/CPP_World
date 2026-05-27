@@ -145,6 +145,7 @@
     <ClInclude Include="AnimalFactory.h" />
     <ClInclude Include="Dandelion.h" />
     <ClInclude Include="DandelionFactory.h" />
+    <ClInclude Include="FileHelpers.h" />
     <ClInclude Include="Grass.h" />
     <ClInclude Include="GrassFactory.h" />
     <ClInclude Include="ImGUIManager.h" />
@@ -178,6 +179,7 @@
     <ClCompile Include="AnimalFactory.cpp" />
     <ClCompile Include="Dandelion.cpp" />
     <ClCompile Include="DandelionFactory.cpp" />
+    <ClCompile Include="FileHelpers.cpp" />
     <ClCompile Include="Grass.cpp" />
     <ClCompile Include="GrassFactory.cpp" />
     <ClCompile Include="ImGUIManager.cpp" />

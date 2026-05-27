@@ -1,4 +1,5 @@
 #pragma once
+#include "World.h"
 
 class ImGUIManager
 {
@@ -8,6 +9,8 @@ private:
     static bool                     g_DeviceLost;
     static UINT                     g_ResizeWidth, g_ResizeHeight;
     static D3DPRESENT_PARAMETERS    g_d3dpp;
+
+    inline static World world;
 
     struct textures
     {
@@ -27,7 +30,6 @@ private:
 
         static void loadTextures();
     };
-
 public:
     ~ImGUIManager()
     {

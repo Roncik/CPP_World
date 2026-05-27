@@ -20,11 +20,11 @@ int main()
 
 	-zaladowanie swiata z pliku
 	-zapisanie swiata do pliku
-	-nastepna tura
-	-dodanie organizmu
-	-usuniecie organizmu
-	-stworzenie losowego swiata(z opcjami)
-	-wyczyszczenie swiata
+	-nastepna tura +
+	-dodanie organizmu +
+	-usuniecie organizmu +
+	-stworzenie losowego swiata(z opcjami) +
+	-wyczyszczenie swiata + 
 
 	ikony:
 	-zaladowanie swiata z pliku +

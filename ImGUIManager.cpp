@@ -2,6 +2,7 @@
 #include "ImGUIManager.h"
 #include "ImGUI/custom.h"
 #include "ImGUI/icons.h"
+#include "FileHelpers.h"
 
 // 
  // Used when user tries to close the program (for handling proper threads joining)
@@ -177,8 +178,7 @@ int ImGUIManager::RunUI()
     io.Fonts->AddFontFromMemoryCompressedTTF(font_awesome_data, font_awesome_size, 32.5f, &icons_config, icons_ranges);
 
     // Load textures for extra Icons
-    IDirect3DTexture9* textureGrass{ nullptr };
-    D3DXCreateTextureFromFileW(ImGUIManager::g_pd3dDevice, L"imgui\\extra_icons\\grass.png", &textureGrass);
+    ImGUIManager::textures::loadTextures();
 
 
     // Used when rendering
@@ -282,64 +282,153 @@ int ImGUIManager::RunUI()
 			ImGui::SetCursorPos(ImVec2(10, 10));
 			if (ImGui::BeginChild(1, ImVec2(70, (600 * main_scale))))
 			{
-				ImGui::SetCursorPos(ImVec2(10, 10));
+                using tex = ImGUIManager::textures;
+                constexpr int y_base{ 10 };
+                constexpr int y_step{ 60 };
 
-				style.Colors[ImGuiCol_Button] = ImColor(0, 0, 0);
-				if (ImGui::Button("\n" "" ICON_FA_ARROW_RIGHT, ImVec2(50, 50)))
-				{
-
-				}
-                if (ImGui::IsItemHovered())
+                //Continue
                 {
-                    ImGui::SetTooltip("Continue");
+                    ImGui::SetCursorPos(ImVec2(10, y_base));
+                    style.Colors[ImGuiCol_Button] = ImColor(0, 0, 0);
+                    if (ImGui::ImageButton("1", (ImTextureRef)tex::Next, ImVec2(43, 43)))
+                    {
+
+                    }
+                    if (ImGui::IsItemHovered())
+                    {
+                        ImGui::SetTooltip("Continue");
+                    }
                 }
 
-				style.Colors[ImGuiCol_Button] = ImColor(0, 0, 0);
-				ImGui::SetCursorPos(ImVec2(10, 70));
-                ImGui::ImageButton("grassicon", (ImTextureRef)textureGrass, ImVec2(50, 50));
+                //Add organism
+                {
+                    ImGui::SetCursorPos(ImVec2(10, y_base + y_step));
+                    style.Colors[ImGuiCol_Button] = ImColor(0, 0, 0);
+                    if (ImGui::ImageButton("2", (ImTextureRef)tex::Add, ImVec2(43, 43)))
+                    {
+
+                    }
+                    if (ImGui::IsItemHovered())
+                    {
+                        ImGui::SetTooltip("Add organism");
+                    }
+                }
+
+                //Delete organism
+                {
+                    ImGui::SetCursorPos(ImVec2(10, y_base + y_step*2));
+                    style.Colors[ImGuiCol_Button] = ImColor(0, 0, 0);
+                    if (ImGui::ImageButton("3", (ImTextureRef)tex::Remove, ImVec2(43, 43)))
+                    {
+
+                    }
+                    if (ImGui::IsItemHovered())
+                    {
+                        ImGui::SetTooltip("Delete organism");
+                    }
+                }
+
+                //Clear world
+                {
+                    ImGui::SetCursorPos(ImVec2(10, y_base + y_step*3));
+                    style.Colors[ImGuiCol_Button] = ImColor(0, 0, 0);
+                    if (ImGui::ImageButton("4", (ImTextureRef)tex::Clear, ImVec2(43, 43)))
+                    {
+
+                    }
+                    if (ImGui::IsItemHovered())
+                    {
+                        ImGui::SetTooltip("Clear world");
+                    }
+                }
+
+                //Randomize world
+                {
+                    static int worldX, worldY;
+                    static int numOfOrganisms; //must be int for InputInt
+                    static std::vector<char> possibleOrganisms;
+
+                    ImGui::SetCursorPos(ImVec2(10, y_base + y_step * 4));
+                    style.Colors[ImGuiCol_Button] = ImColor(0, 0, 0);
+                    if (ImGui::ImageButton("5", (ImTextureRef)tex::Randomize, ImVec2(43, 43)))
+                    {
+                        ImGui::OpenPopup("input world parameters");
+                    }
+                    if (ImGui::IsItemHovered())
+                    {
+                        ImGui::SetTooltip("Randomize world");
+                    }
+
+                    if (ImGui::BeginPopupModal(
+                        "input world parameters",
+                        nullptr,
+                        ImGuiWindowFlags_AlwaysAutoResize))
+                    {
+                        ImGui::InputInt("World width", &worldX);
+                        ImGui::InputInt("World height", &worldY);
+                        ImGui::InputInt("Number of created organisms", &numOfOrganisms);
+
+                        static std::string signs(1000, 0);
+                        ImGui::InputText("Possible organisms signs('G', 'S', 'D', 'W', 'T')", signs.data(), signs.size());
 
 
-				/*if (ImGui::Button("\n" "" ICON_FA_SHEEP, ImVec2(50, 50)))
-				{
 
-				}*/
+                        if (ImGui::Button("OK"))
+                        {
+                            possibleOrganisms.clear();
+                            for (size_t i = 0; i < strlen(signs.data()); ++i)
+                            {
+                                char& sign = signs[i];
+                                possibleOrganisms.push_back(sign);
+                            }
 
-				style.Colors[ImGuiCol_Button] = ImColor(0, 0, 0);
-				ImGui::SetCursorPos(ImVec2(10, 130));
-				if (ImGui::Button("\n" "" ICON_FA_KEYBOARD, ImVec2(50, 50)))
-				{
+                            world.Randomize(worldX, worldY, numOfOrganisms, possibleOrganisms);
 
-				}
+                            ImGui::CloseCurrentPopup();
+                        }
 
-				style.Colors[ImGuiCol_Button] = ImColor(0, 0, 0);
-				ImGui::SetCursorPos(ImVec2(10, 190));
-				if (ImGui::Button("\n" "" ICON_FA_PAINT_BRUSH, ImVec2(50, 50)))
-				{
+                        ImGui::SameLine();
 
-				}
+                        if (ImGui::Button("Cancel"))
+                        {
+                            ImGui::CloseCurrentPopup();
+                        }
 
-				/*style.Colors[ImGuiCol_Button] = ImColor(0, 0, 0);
-				style.Colors[ImGuiCol_Text] = ImColor(0, 204, 255);
-				style.Colors[ImGuiCol_ButtonActive] = ImColor(0, 102, 204);
-				style.Colors[ImGuiCol_ButtonHovered] = ImColor(0, 102, 204);*/
-				/*ImGui::SetCursorPos(ImVec2(10, 220));
-				if (ImGui::Button("\n" "" ICON_FA_SHOPPING_CART, ImVec2(50, 50)))
-				{
-					val.tab = 2;
-				}
-				style.Colors[ImGuiCol_Text] = ImColor(255, 255, 255);
-				style.Colors[ImGuiCol_ButtonActive] = ImColor(0, 0, 0);
-				style.Colors[ImGuiCol_ButtonHovered] = ImColor(100, 100, 100);*/
+                        ImGui::EndPopup();
+                    }
+                }
 
+                //Export world
+                {
+                    ImGui::SetCursorPos(ImVec2(10, y_base + y_step * 5));
+                    style.Colors[ImGuiCol_Button] = ImColor(0, 0, 0);
+                    if (ImGui::ImageButton("6", (ImTextureRef)tex::Save, ImVec2(43, 43)))
+                    {
+                        std::string path = FileHelpers::SaveFileDialog();
+                        world.writeWorld(path);
+                    }
+                    if (ImGui::IsItemHovered())
+                    {
+                        ImGui::SetTooltip("Export world");
+                    }
+                }
+
+                //Import world
+                {
+                    ImGui::SetCursorPos(ImVec2(10, y_base + y_step * 6));
+                    style.Colors[ImGuiCol_Button] = ImColor(0, 0, 0);
+                    if (ImGui::ImageButton("7", (ImTextureRef)tex::Load, ImVec2(43, 43)))
+                    {
+                        std::string path = FileHelpers::OpenFileDialog();
+                        world.readWorld(path);
+                    }
+                    if (ImGui::IsItemHovered())
+                    {
+                        ImGui::SetTooltip("Import world");
+                    }
+                }
 				ImGui::EndChild();
 			}
-			//ImGui::SetCursorPos(ImVec2(90, 10));
-			//if (ImGui::BeginChild(2, ImVec2(320, 380)))
-			//{
-			//	//ImGui::SetCursorPos(ImVec2(110, 5));
-			//	//ImGui::Text(StringHelper::get_string(157).c_str());
-			//	ImGui::EndChild();
-			//}
 			ImGui::End();
 		}
 
@@ -393,4 +482,27 @@ int ImGUIManager::RunUI()
     ::UnregisterClassW(wc.lpszClassName, wc.hInstance);
 
     return 0;
+}
+
+void ImGUIManager::textures::loadTextures()
+{
+    if (!ImGUIManager::g_pd3dDevice)
+        return;
+
+    if (D3DXCreateTextureFromFileW(ImGUIManager::g_pd3dDevice, L"imgui\\extra_icons\\file_open.png", &Load) ||
+        D3DXCreateTextureFromFileW(ImGUIManager::g_pd3dDevice, L"imgui\\extra_icons\\file_export.png", &Save) ||
+        D3DXCreateTextureFromFileW(ImGUIManager::g_pd3dDevice, L"imgui\\extra_icons\\continue.png", &Next) ||
+        D3DXCreateTextureFromFileW(ImGUIManager::g_pd3dDevice, L"imgui\\extra_icons\\add_organism.png", &Add) ||
+        D3DXCreateTextureFromFileW(ImGUIManager::g_pd3dDevice, L"imgui\\extra_icons\\remove_organism.png", &Remove) ||
+        D3DXCreateTextureFromFileW(ImGUIManager::g_pd3dDevice, L"imgui\\extra_icons\\randomize_world.png", &Randomize) ||
+        D3DXCreateTextureFromFileW(ImGUIManager::g_pd3dDevice, L"imgui\\extra_icons\\delete_world.png", &Clear) ||
+        D3DXCreateTextureFromFileW(ImGUIManager::g_pd3dDevice, L"imgui\\extra_icons\\grass.png", &Grass) ||
+        D3DXCreateTextureFromFileW(ImGUIManager::g_pd3dDevice, L"imgui\\extra_icons\\dandelion.png", &Dandelion) ||
+        D3DXCreateTextureFromFileW(ImGUIManager::g_pd3dDevice, L"imgui\\extra_icons\\wolf.png", &Wolf) ||
+        D3DXCreateTextureFromFileW(ImGUIManager::g_pd3dDevice, L"imgui\\extra_icons\\sheep_fix.png", &Sheep) ||
+        D3DXCreateTextureFromFileW(ImGUIManager::g_pd3dDevice, L"imgui\\extra_icons\\toadstool.png", &Toadstool) ||
+        D3DXCreateTextureFromFileW(ImGUIManager::g_pd3dDevice, L"imgui\\extra_icons\\square.png", &Free))
+    {
+        throw std::runtime_error("failed to load all textures");
+    }
 }

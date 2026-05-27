@@ -85,6 +85,9 @@
     <Filter Include="__main__">
       <UniqueIdentifier>{0415856e-8f89-4f7d-b646-bf387b4585ad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="FileHelpers">
+      <UniqueIdentifier>{2c9f4e4a-a90e-42e0-b125-ecc0e42850b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -180,6 +183,9 @@
     <ClInclude Include="imgui\icons.h">
       <Filter>ImGUI\icons</Filter>
     </ClInclude>
+    <ClInclude Include="FileHelpers.h">
+      <Filter>FileHelpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -268,6 +274,9 @@
     </ClCompile>
     <ClCompile Include="imgui\imgui_widgets.cpp">
       <Filter>ImGUI\imgui_dependencies</Filter>
+    </ClCompile>
+    <ClCompile Include="FileHelpers.cpp">
+      <Filter>FileHelpers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -432,3 +432,36 @@ std::string World::toString()
 	return result;
 }
 
+void World::Randomize(int worldX, int worldY, size_t numOfOrganisms, const std::vector<char>& possibleOrganismsSigns)
+{
+	if (!worldX || !worldY)
+		return;
+	
+	if (numOfOrganisms > (worldX * worldY))
+		throw std::logic_error("The chosen number of organisms couldn't fit in a world of this size");
+
+	srand(static_cast<unsigned int>(time(0)));
+	
+	organisms.clear();
+
+	setWorldX(worldX);
+	setWorldY(worldY);
+
+	for (size_t i = 0; i < numOfOrganisms; ++i)
+	{
+		const char& randomSign = possibleOrganismsSigns[rand() % possibleOrganismsSigns.size()];
+
+		auto org = OrganismFactoryRegistry::getFactory(randomSign)->create();
+		Position randPosition;
+		do
+		{
+			randPosition = Position(rand() % worldX, rand() % worldY);
+		} 
+		while (this->getOrganismFromPosition(randPosition.getX(), randPosition.getY()));
+
+
+		org->setPosition(randPosition);
+		addOrganism(org);
+	}
+}
+

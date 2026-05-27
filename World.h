@@ -38,6 +38,8 @@ public:
 	
 	std::string toString();
 
+	void Randomize(int worldX, int worldY, size_t numOfOrganisms, const std::vector<char>& possibleOrganismsSigns);
+
 	//SERIALIZATION
 	std::string serialize();
 	void writeWorld(std::string fileName);
