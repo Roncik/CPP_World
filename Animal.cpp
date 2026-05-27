@@ -13,7 +13,7 @@ void Animal::setIsCarnivore(bool isCarnivore)
 
 std::string Animal::serialize()
 {
-	std::stringstream ss;
+	std::stringstream ss{};
 	// tutaj trzeba uzyc write zeby zawsze zapisac odpowiednia ta sama ilosc bajtow - np worldX = 6 zapisze sie tylko jeden bajt przy <<
 
 	//znak na poczatku zeby wiadomo bylo od razu jaki organizm trzeba stworzyc
@@ -29,7 +29,7 @@ std::string Animal::serialize()
 	ss.write((char*)&selfrec, sizeof(selfrec));
 
 	//familyHistory
-	size_t size;
+	size_t size = familyHistory.size();
 	ss.write((char*)&size, sizeof(size));
 	std::for_each(familyHistory.begin(), familyHistory.end(), [&](auto& cur)
 		{

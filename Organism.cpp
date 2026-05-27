@@ -122,7 +122,7 @@ void Organism::logDeathTurn(int turnNum)
 
 std::string Organism::serialize()
 {
-	std::stringstream ss;
+	std::stringstream ss{};
 	// tutaj trzeba uzyc write zeby zawsze zapisac odpowiednia ta sama ilosc bajtow - np worldX = 6 zapisze sie tylko jeden bajt przy <<
 
 	//znak na poczatku zeby wiadomo bylo od razu jaki organizm trzeba stworzyc

@@ -159,7 +159,7 @@ void World::makeTurn()
 
 std::string World::serialize()
 {
-	std::stringstream ss;
+	std::stringstream ss{};
 	// tutaj trzeba uzyc write zeby zawsze zapisac odpowiednia ta sama ilosc bajtow - np worldX = 6 zapisze sie tylko jeden bajt przy <<
 	ss.write((char*)&this->worldX, sizeof(this->worldX));
 	ss.write((char*)&this->worldY, sizeof(this->worldY));
@@ -178,11 +178,11 @@ void World::writeWorld(std::string fileName)
 	if (!my_file.is_open())
 		return;
 
-	std::string data = serialize();
+	std::string data = this->serialize(); // world serializes itself
 	std::for_each(organisms.begin(), organisms.end(), [&](auto& cur)
 		{
 			auto& org = *cur.get();
-			data += org.serialize();
+			data += org.serialize(); // all organisms serialize themselves
 		});
 
 	my_file.write(data.c_str(), data.size());

@@ -35,7 +35,7 @@ int main()
 	//world.addOrganism(grass);
 	//world.addOrganism(sheep);
 	world.addOrganism(dandelion);
-	//world.addOrganism(wolf);
+	world.addOrganism(wolf);
 	//world.addOrganism(toadstool);
 
 	// Tura 0
@@ -47,6 +47,8 @@ int main()
 
 	world.writeWorld("testworld.bin");
 	world.readWorld("testworld.bin");
+
+	std::cout << world.toString() << '\n';
 
 	// Tura 2
 	world.makeTurn();
