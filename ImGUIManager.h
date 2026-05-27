@@ -9,6 +9,25 @@ private:
     static UINT                     g_ResizeWidth, g_ResizeHeight;
     static D3DPRESENT_PARAMETERS    g_d3dpp;
 
+    struct textures
+    {
+        inline static IDirect3DTexture9* Load{ nullptr };
+        inline static IDirect3DTexture9* Save{ nullptr };
+        inline static IDirect3DTexture9* Next{ nullptr };
+        inline static IDirect3DTexture9* Add{ nullptr };
+        inline static IDirect3DTexture9* Remove{ nullptr };
+        inline static IDirect3DTexture9* Randomize{ nullptr };
+        inline static IDirect3DTexture9* Clear{ nullptr };
+        inline static IDirect3DTexture9* Grass{ nullptr };
+        inline static IDirect3DTexture9* Dandelion{ nullptr };
+        inline static IDirect3DTexture9* Wolf{ nullptr };
+        inline static IDirect3DTexture9* Sheep{ nullptr };
+        inline static IDirect3DTexture9* Toadstool{ nullptr };
+        inline static IDirect3DTexture9* Free{ nullptr };
+
+        static void loadTextures();
+    };
+
 public:
     ~ImGUIManager()
     {

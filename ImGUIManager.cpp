@@ -180,6 +180,7 @@ int ImGUIManager::RunUI()
     IDirect3DTexture9* textureGrass{ nullptr };
     D3DXCreateTextureFromFileW(ImGUIManager::g_pd3dDevice, L"imgui\\extra_icons\\grass.png", &textureGrass);
 
+
     // Used when rendering
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);         
 
