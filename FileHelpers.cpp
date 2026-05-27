@@ -39,7 +39,7 @@ std::string FileHelpers::SaveFileDialog()
     ofn.nMaxFile = MAX_PATH;
 
     ofn.lpstrFilter =
-        "World Files\0*.world\0"
+        "Binary Files\0*.bin\0"
         "All Files\0*.*\0";
 
     ofn.nFilterIndex = 1;

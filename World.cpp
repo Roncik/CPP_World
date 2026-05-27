@@ -2,7 +2,6 @@
 #include "World.h"
 #include "OrganismFactoryRegistry.h"
 #include "Animal.h"
-#include "Organism.h"
 
 bool World::getOrganismFromPosition(int x, int y, size_t* index)
 {	
@@ -82,6 +81,11 @@ int World::getTurn()
 void World::addOrganism(std::unique_ptr<Organism>& organism)
 {
 	this->organisms.push_back(std::move(organism));
+}
+
+const std::vector<std::unique_ptr<Organism>>& World::getOrganisms()
+{
+	return this->organisms;
 }
 
 void World::removeOrganism(size_t index)
@@ -292,6 +296,12 @@ void World::readWorld(std::string fileName)
 			my_file.read((char*)&isCarnivore, sizeof(isCarnivore));
 			animal->setIsCarnivore(isCarnivore);
 		}
+		else
+		{
+			// i tak musimy odczytac bool zeby przesunac 'kursor odczytu' dalej
+			auto dummy = Organism().getIsAnimal();
+			my_file.read((char*)&dummy, sizeof(dummy));
+		}
 
 		addOrganism(newOrganism);
 	}
@@ -465,3 +475,10 @@ void World::Randomize(int worldX, int worldY, size_t numOfOrganisms, const std::
 	}
 }
 
+void World::clear()
+{
+	this->worldX = 0;
+	this->worldY = 0;
+	this->turn = 0;
+	this->organisms.clear();
+}

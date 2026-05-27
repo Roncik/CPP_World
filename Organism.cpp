@@ -166,3 +166,8 @@ std::string Organism::serialize()
 
 	return ss.str();
 }
+
+IDirect3DTexture9* Organism::getTexture()
+{
+	return nullptr;
+}

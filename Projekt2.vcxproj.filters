@@ -197,7 +197,7 @@
     <ClCompile Include="Animal.cpp">
       <Filter>Animal</Filter>
     </ClCompile>
-    <ClCompile Include="LivingWorld.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>__main__</Filter>
     </ClCompile>
     <ClCompile Include="World.cpp">

@@ -57,3 +57,4 @@ std::string Animal::serialize()
 
 	return ss.str();
 }
+

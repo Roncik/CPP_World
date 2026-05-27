@@ -9,6 +9,7 @@
 #include <cassert>
 #include <algorithm>
 #include <sstream>
+#include <ctime>
 
 #include <d3d9.h>
 #include <d3dx9.h>

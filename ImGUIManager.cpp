@@ -234,11 +234,6 @@ int ImGUIManager::RunUI()
         ImGui::NewFrame();
         ImGui::DockSpaceOverViewport();       
 
-
-		ImGui::SetNextWindowPos({ 0,0 }, ImGuiCond_Once);
-		ImGui::SetNextWindowSize({ (800 * main_scale), (600 * main_scale) });
-		ImGui::SetNextWindowBgAlpha(1.0f);
-
 		ImGuiStyle& style = ImGui::GetStyle();
 		{
 			//Styles
@@ -270,6 +265,10 @@ int ImGUIManager::RunUI()
 			style.Colors[ImGuiCol_Border] = ImColor(0, 0, 0, 255);
 		}
 
+        ImGui::SetNextWindowPos({ 0,0 }, ImGuiCond_Once);
+        ImGui::SetNextWindowSize({ (783 * main_scale), (560 * main_scale) });
+        ImGui::SetNextWindowBgAlpha(1.0f);
+
 		if (ImGui::Begin("mainWindow", (bool*)0,
 			ImGuiWindowFlags_NoResize |
 			ImGuiWindowFlags_NoSavedSettings |
@@ -279,8 +278,10 @@ int ImGUIManager::RunUI()
             ImGuiWindowFlags_NoMove |
             ImGuiWindowFlags_NoNav))
 		{
-			ImGui::SetCursorPos(ImVec2(10, 10));
-			if (ImGui::BeginChild(1, ImVec2(70, (600 * main_scale))))
+			
+            // Options bar
+            ImGui::SetCursorPos(ImVec2(10, 10));
+			if (ImGui::BeginChild(1, ImVec2(70, (430 * main_scale))))
 			{
                 using tex = ImGUIManager::textures;
                 constexpr int y_base{ 10 };
@@ -292,7 +293,7 @@ int ImGUIManager::RunUI()
                     style.Colors[ImGuiCol_Button] = ImColor(0, 0, 0);
                     if (ImGui::ImageButton("1", (ImTextureRef)tex::Next, ImVec2(43, 43)))
                     {
-
+                        world.makeTurn();
                     }
                     if (ImGui::IsItemHovered())
                     {
@@ -334,7 +335,7 @@ int ImGUIManager::RunUI()
                     style.Colors[ImGuiCol_Button] = ImColor(0, 0, 0);
                     if (ImGui::ImageButton("4", (ImTextureRef)tex::Clear, ImVec2(43, 43)))
                     {
-
+                        world.clear();
                     }
                     if (ImGui::IsItemHovered())
                     {
@@ -359,10 +360,7 @@ int ImGUIManager::RunUI()
                         ImGui::SetTooltip("Randomize world");
                     }
 
-                    if (ImGui::BeginPopupModal(
-                        "input world parameters",
-                        nullptr,
-                        ImGuiWindowFlags_AlwaysAutoResize))
+                    if (ImGui::BeginPopupModal("input world parameters", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
                     {
                         ImGui::InputInt("World width", &worldX);
                         ImGui::InputInt("World height", &worldY);
@@ -427,8 +425,79 @@ int ImGUIManager::RunUI()
                         ImGui::SetTooltip("Import world");
                     }
                 }
+
 				ImGui::EndChild();
 			}
+
+
+            // World window
+            //style.Colors[ImGuiCol_ChildBg] = 
+            ImGui::SetCursorPos(ImVec2(90, 10));
+            if (ImGui::BeginChild(2, ImVec2(684, (540 * main_scale))))
+            {
+                ImDrawList* drawList = ImGui::GetWindowDrawList();
+                ImGui::SetCursorPos(ImVec2(10, 10));
+                ImVec2 origin = ImGui::GetCursorScreenPos();
+                ImGui::Dummy(ImVec2(0, 0));
+
+                constexpr float cellSize = 70.0f;
+                int width = world.getWorldX();
+                int height = world.getWorldY();
+
+                for (int x = 0; x <= width; ++x)
+                {
+                    float px = origin.x + x * cellSize;
+                    drawList->AddLine(ImVec2(px, origin.y), ImVec2(px, origin.y + height * cellSize), IM_COL32(200, 200, 200, 50));
+                }
+
+                for (int y = 0; y <= height; ++y)
+                {
+                    float py = origin.y + y * cellSize;
+                    drawList->AddLine(ImVec2(origin.x, py), ImVec2(origin.x + width * cellSize, py), IM_COL32(200, 200, 200, 50));
+                }
+
+                const auto& organisms = world.getOrganisms();
+                for (size_t i = 0; i < organisms.size(); ++i)
+                {
+                    const auto& org = organisms[i];
+                    
+                    Position p = org->getPosition();
+
+                    float x = origin.x + p.getX() * cellSize;
+                    float y = origin.y + p.getY() * cellSize;
+
+                   // drawList->AddRectFilled(ImVec2(x, y), ImVec2(x + cellSize, y + cellSize), IM_COL32(0, 255, 0, 255));
+
+                    //tutaj jest duzo magicznych liczb bo ImageButton dodaje jakies niejasne marginesy
+                    ImGui::SetCursorScreenPos(ImVec2(x+0.5, y+0.5));
+                    std::string id = "organism:" + std::to_string(i);
+                    std::string popupid = "organism:" + std::to_string(i) + "popup";
+                    if (ImGui::ImageButton(id.c_str(), (ImTextureRef)org->getTexture(), ImVec2(cellSize-8.3, cellSize-6.25)))
+                    {
+                        ImGui::OpenPopup(popupid.c_str());
+                    }
+
+                    if (ImGui::BeginPopupModal(popupid.c_str(), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize))
+                    {
+                        if (ImGui::Button("Remove"))
+                        {
+                            world.removeOrganism(i);
+                            ImGui::CloseCurrentPopup();
+                        }
+
+                        ImGui::SameLine();
+
+                        if (ImGui::Button("Cancel"))
+                        {
+                            ImGui::CloseCurrentPopup();
+                        }
+
+                        ImGui::EndPopup();
+                    }
+                }
+
+                ImGui::EndChild();
+            }
 			ImGui::End();
 		}
 

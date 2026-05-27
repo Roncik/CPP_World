@@ -11,10 +11,11 @@
 #include "Toadstool.h"
 #include "ImGUIManager.h"
 
-using org = std::unique_ptr<Organism>;
-
-int main()
+//int main()
+int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
+	using org = std::unique_ptr<Organism>;
+	
 	/*
 	Jakie opcje powinny byc w GUI?
 
