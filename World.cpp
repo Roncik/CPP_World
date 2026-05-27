@@ -292,6 +292,12 @@ void World::readWorld(std::string fileName)
 			my_file.read((char*)&isCarnivore, sizeof(isCarnivore));
 			animal->setIsCarnivore(isCarnivore);
 		}
+		else
+		{
+			// i tak musimy odczytac bool zeby przesunac 'kursor odczytu' dalej
+			auto dummy = Organism().getIsAnimal();
+			my_file.read((char*)&dummy, sizeof(dummy));
+		}
 
 		addOrganism(newOrganism);
 	}
