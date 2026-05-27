@@ -10,7 +10,7 @@ private:
 	int worldX;
 	int worldY;
 	int turn{ 0 };
-	
+	std::vector<std::unique_ptr<Organism>> organisms;
 	char separator{ '.' };
 
 	bool getOrganismFromPosition(int x, int y, size_t* index = nullptr);
@@ -18,7 +18,6 @@ private:
 	bool isPositionFree(Position position);
 
 public:
-	std::vector<std::unique_ptr<Organism>> organisms;
 	World(int worldX, int worldY);
 	World() : World(6, 6) {};
 

@@ -2,6 +2,7 @@
 #include "World.h"
 #include "OrganismFactoryRegistry.h"
 #include "Animal.h"
+#include "Organism.h"
 
 bool World::getOrganismFromPosition(int x, int y, size_t* index)
 {	
@@ -177,72 +178,128 @@ void World::writeWorld(std::string fileName)
 	if (!my_file.is_open())
 		return;
 
-	my_file.write((char*)&this->worldX, sizeof(int));
-	my_file.write((char*)&this->worldY, sizeof(int));
-	my_file.write((char*)&this->turn, sizeof(int));
-	size_t orgs_size = this->organisms.size();
-	my_file.write((char*)&orgs_size, sizeof(int));
-	for (size_t i = 0; i < orgs_size; ++i)
-	{
-		int data;
-		data = this->organisms[i]->getPower();
-		my_file.write((char*)&data, sizeof(int));
-		data = this->organisms[i]->getPosition().getX();
-		my_file.write((char*)&data, sizeof(int));
-		data = this->organisms[i]->getPosition().getY();
-		my_file.write((char*)&data, sizeof(int));
-		char s_data = this->organisms[i]->getSign();
-		my_file.write((char*)&s_data, sizeof(char));
-	}
-	my_file.close();
+	std::string data = serialize();
+	std::for_each(organisms.begin(), organisms.end(), [&](auto& cur)
+		{
+			auto& org = *cur.get();
+			data += org.serialize();
+		});
 
+	my_file.write(data.c_str(), data.size());
+	my_file.close();
 }
 
 void World::readWorld(std::string fileName)
 {
-	assert(false && "need to fix this function");
-	
 	std::fstream my_file;
 	my_file.open(fileName, std::ios::in | std::ios::binary);
-	if (my_file.is_open()) {
-		int result;
-		my_file.read((char*)&result, sizeof(int));
-		this->worldX = (int)result;
-		my_file.read((char*)&result, sizeof(int));
-		this->worldY = (int)result;
-		my_file.read((char*)&result, sizeof(int));
-		this->turn = (int)result;
-		my_file.read((char*)&result, sizeof(int));
-		int orgs_size = (int)result;
-		std::vector<Organism> new_organisms;
-		for (int i = 0; i < orgs_size; i++) {
-			int power;
-			my_file.read((char*)&result, sizeof(int));
-			power = (int)result;
-
-			int pos_x;
-			my_file.read((char*)&result, sizeof(int));
-			pos_x = (int)result;
-			int pos_y;
-			my_file.read((char*)&result, sizeof(int));
-			pos_y = (int)result;
-			Position pos{ pos_x, pos_y };
-			
-			int s_size;
-			my_file.read((char*)&result, sizeof(int));
-			s_size = (int)result;
-
-			std::string species;
-			species.resize(s_size);
-			my_file.read((char*)&species[0], s_size);
-			
-			/*Organism org(power, pos);
-			org.setSign(species);
-			new_organisms.push_back(org);*/
-		}
-		//this->organisms = new_organisms;
-		my_file.close();
+	if (!my_file.is_open())
+	{
+		throw std::runtime_error("couldn't open file for import");
 	}
+
+	organisms.clear();
+
+	/*
+	struktura serializacji:
+	worldX
+	worldY
+	turn
+	organisms_size
+	***sign
+	***position
+	***selfRecord
+	***familyHistory
+	***power
+	***initiative
+	***liveLength
+	***powerToReproduce
+	***isAnimal
+	***isCarnivore
+	*/
+
+	// worldX
+	my_file.read((char*)&worldX, sizeof(worldX));
+
+	// worldY
+	my_file.read((char*)&worldY, sizeof(worldY));
+
+	// turn
+	my_file.read((char*)&turn, sizeof(turn));
+
+	// organisms
+	size_t organisms_size;
+	my_file.read((char*)&organisms_size, sizeof(organisms_size));
+
+	for (size_t i = 0; i < organisms_size; ++i)
+	{
+		// sign
+		auto sign = Organism().getSign(); // trik zeby auto sign zawsze byl tym samym typem co w Organism
+		my_file.read((char*)&sign, sizeof(sign));
+		std::unique_ptr<Organism> newOrganism = OrganismFactoryRegistry::getFactory(sign)->create();
+		newOrganism->setSign(sign);
+
+		// position
+		auto position = Organism().getPosition();
+		my_file.read((char*)&position, sizeof(position));
+		newOrganism->setPosition(position);
+
+		// selfRecord
+		auto selfRecord = Organism().getSelfRecord();
+		my_file.read((char*)&selfRecord, sizeof(selfRecord));
+		newOrganism->setSelfRecord(selfRecord);
+
+		// familyHistory
+		size_t size{};
+		my_file.read((char*)&size, sizeof(size));
+		while (size--)
+		{
+			auto record = Organism().getSelfRecord();
+			my_file.read((char*)&record, sizeof(record));
+			newOrganism->addFamilyRecord(record);
+		}
+
+		// power
+		auto power = Organism().getPower();
+		my_file.read((char*)&power, sizeof(power));
+		newOrganism->setPower(power);
+
+		// initiative
+		auto initiative = Organism().getInitiative();
+		my_file.read((char*)&initiative, sizeof(initiative));
+		newOrganism->setInitiative(initiative);
+
+		// liveLength
+		auto liveLength = Organism().getLiveLength();
+		my_file.read((char*)&liveLength, sizeof(liveLength));
+		newOrganism->setLiveLength(liveLength);
+
+		// powerToReproduce
+		auto powerToReproduce = Organism().getPowerToReproduce();
+		my_file.read((char*)&powerToReproduce, sizeof(powerToReproduce));
+		newOrganism->setPowerToReproduce(powerToReproduce);
+
+		// isAnimal
+		auto isAnimal = Organism().getIsAnimal();
+		my_file.read((char*)&isAnimal, sizeof(isAnimal));
+		newOrganism->setIsAnimal(isAnimal);
+
+		// isCarnivore
+		if (isAnimal)
+		{
+			Animal* animal = dynamic_cast<Animal*>(newOrganism.get());
+			auto isCarnivore = animal->getIsCarnivore();
+			my_file.read((char*)&isCarnivore, sizeof(isCarnivore));
+			animal->setIsCarnivore(isCarnivore);
+		}
+
+		addOrganism(newOrganism);
+	}
+
+
+
+	my_file.close();
+	
 }
 
 void World::handleMove(size_t& orgIndex, bool isAnimal, bool isCarnivore)

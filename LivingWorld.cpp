@@ -38,13 +38,15 @@ int main()
 	//world.addOrganism(wolf);
 	//world.addOrganism(toadstool);
 
-	world.writeWorld("world.bin");
 	// Tura 0
 	std::cout << world.toString() << '\n';
 
 	// Tura 1
 	world.makeTurn();
 	std::cout << world.toString() << '\n';
+
+	world.writeWorld("testworld.bin");
+	world.readWorld("testworld.bin");
 
 	// Tura 2
 	world.makeTurn();
@@ -70,7 +72,7 @@ int main()
 	world.makeTurn();
 	std::cout << world.toString() << '\n';
 
-	world.organisms.back()->serialize();
+	
 	
 	
 	

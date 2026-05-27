@@ -51,16 +51,26 @@ void Organism::setPosition(Position position)
 	this->position = position;
 }
 
+std::pair<int, int> Organism::getSelfRecord()
+{
+	return *this->selfRecord.get();
+}
+
+void Organism::setSelfRecord(std::pair<int, int> selfRecord)
+{
+	this->selfRecord = std::make_shared<std::pair<int, int>>(selfRecord);
+}
+
+void Organism::addFamilyRecord(const std::pair<int, int>& record)
+{
+	familyHistory.push_back(std::make_shared<std::pair<int, int>>(record));
+}
+
 std::string Organism::toString()
 {
 	return "{ species: " + std::to_string(this->getSign()) + 
 		", power: " + std::to_string(getPower()) +
 			", position: " + getPosition().toString() + "}";
-}
-
-void Organism::move(int dx, int dy)
-{
-	position.move(dx, dy);
 }
 
 char Organism::getSign()
@@ -115,6 +125,10 @@ std::string Organism::serialize()
 	std::stringstream ss;
 	// tutaj trzeba uzyc write zeby zawsze zapisac odpowiednia ta sama ilosc bajtow - np worldX = 6 zapisze sie tylko jeden bajt przy <<
 
+	//znak na poczatku zeby wiadomo bylo od razu jaki organizm trzeba stworzyc
+	//sign
+	ss.write((char*)&this->sign, sizeof(this->sign));
+
 	//position
 	ss.write((char*)&this->position, sizeof(this->position));
 
@@ -123,7 +137,7 @@ std::string Organism::serialize()
 	ss.write((char*)&selfrec, sizeof(selfrec));
 
 	//familyHistory
-	auto size = familyHistory.size();
+	size_t size = familyHistory.size();
 	ss.write((char*)&size, sizeof(size));
 	std::for_each(familyHistory.begin(), familyHistory.end(), [&](auto& cur)
 		{
@@ -142,9 +156,6 @@ std::string Organism::serialize()
 
 	//powerToReproduce
 	ss.write((char*)&this->powerToReproduce, sizeof(this->powerToReproduce));
-
-	//sign
-	ss.write((char*)&this->sign, sizeof(this->sign));
 
 	//isAnimal
 	ss.write((char*)&this->isAnimal, sizeof(this->isAnimal));

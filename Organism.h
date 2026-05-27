@@ -6,11 +6,9 @@ class Organism
 private:
 	Position position;
 
-	std::shared_ptr<std::pair<int, int>> selfRecord;
-
 protected:
+	std::shared_ptr<std::pair<int, int>> selfRecord;
 	std::vector<std::shared_ptr<std::pair<int, int>>> familyHistory{}; // historia to lista par; tur urodzin(1) i śmierci(2) przodków
-
 
 	// Parametry organizmu - ustawia je organizm indywidualnie
 	int power;
@@ -43,6 +41,11 @@ public:
 	Position getPosition();
 	void setPosition(Position position);
 
+	std::pair<int, int> getSelfRecord();
+	void setSelfRecord(std::pair<int, int> selfRecord);
+
+	void addFamilyRecord(const std::pair<int, int>& record);
+
 	int getPower();
 	void setPower(int power);
 
@@ -65,8 +68,6 @@ public:
 	std::vector<std::shared_ptr<std::pair<int, int>>> getHistory();
 	void setHistory(std::vector<std::shared_ptr<std::pair<int, int>>> newHistory);
 	void logDeathTurn(int turnNum);
-
-	void move(int dx, int dy);
 
 	virtual std::string toString();
 
