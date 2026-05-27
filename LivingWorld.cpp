@@ -15,6 +15,18 @@ using org = std::unique_ptr<Organism>;
 
 int main()
 {
+	/*
+	Jakie opcje powinny byc w GUI?
+
+	-zaladowanie swiata z pliku
+	-zapisanie swiata do pliku
+	-nastepna tura
+	-dodanie organizmu
+	-usuniecie organizmu
+	-stworzenie losowego swiata(z opcjami)
+	-wyczyszczenie swiata
+	*/
+	
 	ImGUIManager::RunUI();
 
 

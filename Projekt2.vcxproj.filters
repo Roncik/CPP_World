@@ -31,9 +31,6 @@
     <Filter Include="World">
       <UniqueIdentifier>{290be35f-abcc-4fba-bb39-32dc57616024}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Main">
-      <UniqueIdentifier>{0415856e-8f89-4f7d-b646-bf387b4585ad}</UniqueIdentifier>
-    </Filter>
     <Filter Include="OrganismFactory">
       <UniqueIdentifier>{50ce7b7d-61ff-440b-82a9-7ef939731fc0}</UniqueIdentifier>
     </Filter>
@@ -84,6 +81,9 @@
     </Filter>
     <Filter Include="ImGUI\icons">
       <UniqueIdentifier>{7698af7f-833f-4f8b-bd17-d8ee4347df03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="__main__">
+      <UniqueIdentifier>{0415856e-8f89-4f7d-b646-bf387b4585ad}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -192,7 +192,7 @@
       <Filter>Animal</Filter>
     </ClCompile>
     <ClCompile Include="LivingWorld.cpp">
-      <Filter>Main</Filter>
+      <Filter>__main__</Filter>
     </ClCompile>
     <ClCompile Include="World.cpp">
       <Filter>World</Filter>

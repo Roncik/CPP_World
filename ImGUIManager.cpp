@@ -162,6 +162,24 @@ int ImGUIManager::RunUI()
     //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf");
     //IM_ASSERT(font != nullptr);
 
+    // Load Icons
+    ImFontConfig CustomFont;
+    CustomFont.FontDataOwnedByAtlas = false;
+    static const ImWchar icons_ranges[] = { 0xe000, 0xf8ff, 0 };
+    ImFontConfig icons_config;
+    icons_config.MergeMode = true;
+    icons_config.PixelSnapH = true;
+    icons_config.OversampleH = 3;
+    icons_config.OversampleV = 3;
+    io.IniFilename = NULL;
+    io.WantCaptureMouse = true;
+    io.Fonts->AddFontFromMemoryTTF(const_cast<std::uint8_t*>(Custom), sizeof(Custom), 15, &CustomFont);
+    io.Fonts->AddFontFromMemoryCompressedTTF(font_awesome_data, font_awesome_size, 32.5f, &icons_config, icons_ranges);
+
+    // Load textures for extra Icons
+    IDirect3DTexture9* textureGrass{ nullptr };
+    D3DXCreateTextureFromFileW(ImGUIManager::g_pd3dDevice, L"imgui\\extra_icons\\grass.png", &textureGrass);
+
     // Used when rendering
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);         
 
@@ -216,8 +234,8 @@ int ImGUIManager::RunUI()
         ImGui::DockSpaceOverViewport();       
 
 
-		ImGui::SetNextWindowPos({ 100,100 }, ImGuiCond_Once);
-		ImGui::SetNextWindowSize({ 420, 400 });
+		ImGui::SetNextWindowPos({ 0,0 }, ImGuiCond_Once);
+		ImGui::SetNextWindowSize({ (800 * main_scale), (600 * main_scale) });
 		ImGui::SetNextWindowBgAlpha(1.0f);
 
 		ImGuiStyle& style = ImGui::GetStyle();
@@ -251,30 +269,39 @@ int ImGUIManager::RunUI()
 			style.Colors[ImGuiCol_Border] = ImColor(0, 0, 0, 255);
 		}
 
-		if (ImGui::Begin("WT", (bool*)0,
+		if (ImGui::Begin("mainWindow", (bool*)0,
 			ImGuiWindowFlags_NoResize |
 			ImGuiWindowFlags_NoSavedSettings |
 			ImGuiWindowFlags_NoCollapse |
 			ImGuiWindowFlags_NoScrollbar |
-			ImGuiWindowFlags_NoTitleBar))
+			ImGuiWindowFlags_NoTitleBar |
+            ImGuiWindowFlags_NoMove |
+            ImGuiWindowFlags_NoNav))
 		{
 			ImGui::SetCursorPos(ImVec2(10, 10));
-			if (ImGui::BeginChild(1, ImVec2(70, 250)))
+			if (ImGui::BeginChild(1, ImVec2(70, (600 * main_scale))))
 			{
 				ImGui::SetCursorPos(ImVec2(10, 10));
 
 				style.Colors[ImGuiCol_Button] = ImColor(0, 0, 0);
-				if (ImGui::Button("\n" "" ICON_FA_EYE, ImVec2(50, 50)))
+				if (ImGui::Button("\n" "" ICON_FA_ARROW_RIGHT, ImVec2(50, 50)))
 				{
 
 				}
+                if (ImGui::IsItemHovered())
+                {
+                    ImGui::SetTooltip("Continue");
+                }
 
 				style.Colors[ImGuiCol_Button] = ImColor(0, 0, 0);
 				ImGui::SetCursorPos(ImVec2(10, 70));
-				if (ImGui::Button("\n" "" ICON_FA_BARS, ImVec2(50, 50)))
+                ImGui::ImageButton("grassicon", (ImTextureRef)textureGrass, ImVec2(50, 50));
+
+
+				/*if (ImGui::Button("\n" "" ICON_FA_SHEEP, ImVec2(50, 50)))
 				{
 
-				}
+				}*/
 
 				style.Colors[ImGuiCol_Button] = ImColor(0, 0, 0);
 				ImGui::SetCursorPos(ImVec2(10, 130));
@@ -305,13 +332,13 @@ int ImGUIManager::RunUI()
 
 				ImGui::EndChild();
 			}
-			ImGui::SetCursorPos(ImVec2(90, 10));
-			if (ImGui::BeginChild(2, ImVec2(320, 380)))
-			{
-				//ImGui::SetCursorPos(ImVec2(110, 5));
-				//ImGui::Text(StringHelper::get_string(157).c_str());
-				ImGui::EndChild();
-			}
+			//ImGui::SetCursorPos(ImVec2(90, 10));
+			//if (ImGui::BeginChild(2, ImVec2(320, 380)))
+			//{
+			//	//ImGui::SetCursorPos(ImVec2(110, 5));
+			//	//ImGui::Text(StringHelper::get_string(157).c_str());
+			//	ImGui::EndChild();
+			//}
 			ImGui::End();
 		}
 
