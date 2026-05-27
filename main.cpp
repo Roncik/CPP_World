@@ -11,100 +11,70 @@
 #include "Toadstool.h"
 #include "ImGUIManager.h"
 
-//int main()
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
-	using org = std::unique_ptr<Organism>;
-	
-	/*
-	Jakie opcje powinny byc w GUI?
-
-	-zaladowanie swiata z pliku
-	-zapisanie swiata do pliku
-	-nastepna tura +
-	-dodanie organizmu +
-	-usuniecie organizmu +
-	-stworzenie losowego swiata(z opcjami) +
-	-wyczyszczenie swiata + 
-
-	ikony:
-	-zaladowanie swiata z pliku +
-	-zapisanie swiata do pliku +
-	-nastepna tura +
-	-dodanie organizmu +
-	-usuniecie organizmu + 
-	-stworzenie losowego swiata(z opcjami) + 
-	-wyczyszczenie swiata +
-	-grass +
-	-dandelion +
-	-wolf +
-	-sheep +
-	-toadstool +
-	-freespace
-	*/
-	
 	ImGUIManager::RunUI();
 
+	//using org = std::unique_ptr<Organism>;
 
+	//World world;
 
-	World world;
+	//org grass = std::make_unique<Grass>();
+	//grass->setPosition(Position(0, 0));
 
-	org grass = std::make_unique<Grass>();
-	grass->setPosition(Position(0, 0));
+	//org sheep = std::make_unique<Sheep>();
+	//sheep->setPosition(Position(1, 1));
 
-	org sheep = std::make_unique<Sheep>();
-	sheep->setPosition(Position(1, 1));
+	//org dandelion = std::make_unique<Dandelion>();
+	//dandelion->setPosition(Position(2, 2));
 
-	org dandelion = std::make_unique<Dandelion>();
-	dandelion->setPosition(Position(2, 2));
+	//org wolf = std::make_unique<Wolf>();
+	//wolf->setPosition(Position(3, 3));
 
-	org wolf = std::make_unique<Wolf>();
-	wolf->setPosition(Position(3, 3));
+	//org toadstool = std::make_unique<Toadstool>();
+	//toadstool->setPosition(Position(4, 4));
 
-	org toadstool = std::make_unique<Toadstool>();
-	toadstool->setPosition(Position(4, 4));
+	////world.addOrganism(grass);
+	////world.addOrganism(sheep);
+	//world.addOrganism(dandelion);
+	//world.addOrganism(wolf);
+	////world.addOrganism(toadstool);
 
-	//world.addOrganism(grass);
-	//world.addOrganism(sheep);
-	world.addOrganism(dandelion);
-	world.addOrganism(wolf);
-	//world.addOrganism(toadstool);
+	//// Tura 0
+	//std::cout << world.toString() << '\n';
 
-	// Tura 0
-	std::cout << world.toString() << '\n';
+	//// Tura 1
+	//world.makeTurn();
+	//std::cout << world.toString() << '\n';
 
-	// Tura 1
-	world.makeTurn();
-	std::cout << world.toString() << '\n';
+	//world.writeWorld("testworld.bin");
+	//world.readWorld("testworld.bin");
 
-	world.writeWorld("testworld.bin");
-	world.readWorld("testworld.bin");
+	//std::cout << world.toString() << '\n';
 
-	std::cout << world.toString() << '\n';
+	//// Tura 2
+	//world.makeTurn();
+	//std::cout << world.toString() << '\n';
 
-	// Tura 2
-	world.makeTurn();
-	std::cout << world.toString() << '\n';
+	//// Tura 3
+	//world.makeTurn();
+	//std::cout << world.toString() << '\n';
 
-	// Tura 3
-	world.makeTurn();
-	std::cout << world.toString() << '\n';
+	//// Tura 4
+	//world.makeTurn();
+	//std::cout << world.toString() << '\n';
 
-	// Tura 4
-	world.makeTurn();
-	std::cout << world.toString() << '\n';
+	//// Tura 5
+	//world.makeTurn();
+	//std::cout << world.toString() << '\n';
 
-	// Tura 5
-	world.makeTurn();
-	std::cout << world.toString() << '\n';
+	//// Tura 6
+	//world.makeTurn();
+	//std::cout << world.toString() << '\n';
 
-	// Tura 6
-	world.makeTurn();
-	std::cout << world.toString() << '\n';
-
-	// Tura 7
-	world.makeTurn();
-	std::cout << world.toString() << '\n';
+	//// Tura 7
+	//world.makeTurn();
+	//std::cout << world.toString() << '\n';
 
 	
 	
