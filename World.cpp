@@ -388,9 +388,9 @@ void World::handleMove(size_t& orgIndex, bool isAnimal, bool isCarnivore)
 			if (isCarnivore)
 				org->setPower(org->getPower() + nearbyOrganism->getPower());
 
+			org->setPosition(chosenPosition);
 			removeOrganismFixIndex(nearbyOrganismId);
 
-			org->setPosition(chosenPosition);
 			return;
 		}
 		else
