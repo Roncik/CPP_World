@@ -9,12 +9,16 @@
 #include "Dandelion.h"
 #include "Wolf.h"
 #include "Toadstool.h"
+#include "ImGUIManager.h"
 
 using org = std::unique_ptr<Organism>;
 
 int main()
 {
-	
+	ImGUIManager::RunUI();
+
+
+
 	World world;
 
 	org grass = std::make_unique<Grass>();
