@@ -9,6 +9,7 @@ private:
 
 protected:
 	std::shared_ptr<std::pair<int, int>> selfRecord;
+
 	std::vector<std::shared_ptr<std::pair<int, int>>> familyHistory{}; // historia to lista par; tur urodzin(1) i śmierci(2) przodków
 	std::shared_ptr<std::vector<Organism*>> family;
 
@@ -69,6 +70,7 @@ public:
 	void setIsAnimal(bool isAnimal);
 
 	void initHistory(Organism* parent = nullptr, int turnNum = 0);
+	void clearHistory();
 	std::vector<std::shared_ptr<std::pair<int, int>>> getHistory();
 	void setHistory(std::vector<std::shared_ptr<std::pair<int, int>>> newHistory);
 	void logDeathTurn(int turnNum);

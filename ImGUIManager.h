@@ -47,6 +47,7 @@ public:
         inline static IDirect3DTexture9* Sheep{ nullptr };
         inline static IDirect3DTexture9* Toadstool{ nullptr };
         inline static IDirect3DTexture9* Free{ nullptr };
+        inline static IDirect3DTexture9* Empty{ nullptr };
 
         static void loadTextures();
     };

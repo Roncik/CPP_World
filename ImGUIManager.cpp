@@ -403,7 +403,7 @@ int ImGUIManager::RunUI()
                 ImVec2 origin = ImGui::GetCursorScreenPos();
                 ImGui::Dummy(ImVec2(0, 0));
 
-                constexpr float cellSize = 70.0f;
+                constexpr float cellSize = 60.0f;
                 int width = world.getWorldX();
                 int height = world.getWorldY();
 
@@ -483,7 +483,7 @@ int ImGUIManager::RunUI()
                         float y = origin.y + pos.getY() * cellSize;
 
                         //tutaj jest duzo magicznych liczb bo ImageButton dodaje jakies niejasne marginesy
-                        ImGui::SetCursorScreenPos(ImVec2(x + 0.5, y + 0.5));
+                        ImGui::SetCursorScreenPos(ImVec2(x + 0.9, y + 0.9));
 
                         std::string id = '(' + std::to_string(pos.getX()) + ", " + std::to_string(pos.getY()) + ')';
 
@@ -492,7 +492,7 @@ int ImGUIManager::RunUI()
                         {
                             auto& org = world.getOrganisms()[i];
                             std::string popupid = id + " organism";
-                            if (ImGui::ImageButton(id.c_str(), (ImTextureRef)org->getTexture(), ImVec2(cellSize - 8.3, cellSize - 6.25)))
+                            if (ImGui::ImageButton(id.c_str(), (ImTextureRef)org->getTexture(), ImVec2(cellSize - 8.7, cellSize - 6.65)))
                             {
                                 ImGui::OpenPopup(popupid.c_str());
                             }
@@ -534,7 +534,7 @@ int ImGUIManager::RunUI()
                         {
                             //free positon
                             std::string popupid = id + ' ';
-                            if (ImGui::ImageButton(id.c_str(), (ImTextureRef)textures::Free, ImVec2(cellSize - 8.3, cellSize - 6.25)))
+                            if (ImGui::ImageButton(id.c_str(), (ImTextureRef)textures::Empty, ImVec2(cellSize - 8.7, cellSize - 6.65)))
                             {
                                 ImGui::OpenPopup(popupid.c_str());
                             }
@@ -645,7 +645,8 @@ void ImGUIManager::textures::loadTextures()
         D3DXCreateTextureFromFileW(ImGUIManager::g_pd3dDevice, L"imgui\\extra_icons\\wolf.png", &Wolf) ||
         D3DXCreateTextureFromFileW(ImGUIManager::g_pd3dDevice, L"imgui\\extra_icons\\sheep_fix.png", &Sheep) ||
         D3DXCreateTextureFromFileW(ImGUIManager::g_pd3dDevice, L"imgui\\extra_icons\\toadstool.png", &Toadstool) ||
-        D3DXCreateTextureFromFileW(ImGUIManager::g_pd3dDevice, L"imgui\\extra_icons\\square.png", &Free))
+        D3DXCreateTextureFromFileW(ImGUIManager::g_pd3dDevice, L"imgui\\extra_icons\\square.png", &Free) ||
+        D3DXCreateTextureFromFileW(ImGUIManager::g_pd3dDevice, L"imgui\\extra_icons\\empty.png", &Empty))
     {
         throw std::runtime_error("failed to load all textures");
     }

@@ -105,6 +105,11 @@ void Organism::initHistory(Organism* parent, int turnNum)
 	familyHistory.push_back(selfRecord);
 }
 
+void Organism::clearHistory()
+{
+	this->familyHistory.clear();
+}
+
 std::vector<std::shared_ptr<std::pair<int, int>>> Organism::getHistory()
 {
 	return this->familyHistory;

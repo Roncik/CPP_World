@@ -257,6 +257,7 @@ void World::readWorld(std::string fileName)
 		// familyHistory
 		size_t size{};
 		my_file.read((char*)&size, sizeof(size));
+		newOrganism->clearHistory();
 		while (size--)
 		{
 			auto record = Organism().getSelfRecord();
