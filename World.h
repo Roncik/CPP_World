@@ -11,15 +11,13 @@ private:
 	char separator{ '.' };
 
 	std::vector<std::unique_ptr<Organism>> organisms;
+public:
+	World(int worldX, int worldY);
+	World() : World(6, 6) {};
 
 	bool getOrganismFromPosition(int x, int y, size_t* index = nullptr);
 	bool isPositionOnWorld(int x, int y);
 	bool isPositionFree(Position position);
-
-public:
-
-	World(int worldX, int worldY);
-	World() : World(6, 6) {};
 
 	int getWorldX();
 	void setWorldX(int worldX);

@@ -152,6 +152,7 @@ void World::makeTurn()
 				std::unique_ptr<Organism> newOrganism = OrganismFactoryRegistry::getFactory(org->getSign())->create();
 				newOrganism->setPosition(possiblePositions[randomIndex]);
 				newOrganism->initHistory(organisms[i].get(), getTurn() + 1); // tutaj numerTury + 1 bo licznik jest incrementowany na końcu makeTurn
+				newOrganism->initFamily(organisms[i].get());
 
 				addOrganism(newOrganism);
 			}
@@ -370,6 +371,12 @@ void World::handleMove(size_t& orgIndex, bool isAnimal, bool isCarnivore)
 
 		removeOrganismFixIndex(nearbyOrganismId);
 		org->setPosition(chosenPosition);
+		return;
+	}
+	else if (org->isFamily(nearbyOrganism.get()))
+	{
+		// Relatives don't attack each other
+		
 		return;
 	}
 

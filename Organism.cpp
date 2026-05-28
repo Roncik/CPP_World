@@ -120,6 +120,34 @@ void Organism::logDeathTurn(int turnNum)
 	selfRecord->second = turnNum;
 }
 
+void Organism::initFamily(Organism* parent)
+{
+	if (parent)
+		this->family = parent->family;
+	else
+		this->family = std::make_shared<std::vector<Organism*>>();
+	this->family->push_back(this);
+}
+
+bool Organism::isFamily(Organism* other)
+{
+	return std::find(this->family->begin(), this->family->end(), other) != this->family->end();
+}
+
+std::string Organism::printHistory()
+{
+	std::stringstream ss;
+
+	ss << "History: \n";
+	for (size_t i = 0; i < familyHistory.size(); ++i)
+	{
+		auto& entry = familyHistory[i];
+		ss << '(' << entry->first << ", " << entry->second << ')' << ' ' << (i == (familyHistory.size() - 1) ? "Current" : "Relative") << '\n';
+	}
+
+	return ss.str();
+}
+
 std::string Organism::serialize()
 {
 	std::stringstream ss{};

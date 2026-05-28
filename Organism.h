@@ -10,6 +10,8 @@ private:
 protected:
 	std::shared_ptr<std::pair<int, int>> selfRecord;
 	std::vector<std::shared_ptr<std::pair<int, int>>> familyHistory{}; // historia to lista par; tur urodzin(1) i śmierci(2) przodków
+	std::shared_ptr<std::vector<Organism*>> family;
+
 
 	// Parametry organizmu - ustawia je organizm indywidualnie
 	int power;
@@ -31,6 +33,7 @@ public:
 		assert(powerToReproduce - power <= liveLength && "niepoprawne parametry organizmu");
 
 		initHistory();
+		initFamily();
 	}
 	Organism(char sign) : Organism(0, 0, 0, 0, sign) {} //constructor delegation
 	Organism() : Organism('O') {} //constructor delegation
@@ -69,6 +72,11 @@ public:
 	std::vector<std::shared_ptr<std::pair<int, int>>> getHistory();
 	void setHistory(std::vector<std::shared_ptr<std::pair<int, int>>> newHistory);
 	void logDeathTurn(int turnNum);
+
+	void initFamily(Organism* parent = nullptr);
+	bool isFamily(Organism* other);
+
+	std::string printHistory();
 
 	virtual std::string toString();
 

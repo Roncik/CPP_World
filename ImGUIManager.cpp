@@ -3,10 +3,7 @@
 #include "ImGUI/custom.h"
 #include "ImGUI/icons.h"
 #include "FileHelpers.h"
-
-// 
- // Used when user tries to close the program (for handling proper threads joining)
- bool isTryingToExit = false;
+#include "OrganismFactoryRegistry.h"
 
 // -----------------------------------------------------------------------
 // ------------------------ D3DX9 + WIN32 --------------------------------
@@ -82,8 +79,8 @@ LRESULT __stdcall ImGUIManager::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPAR
             if ((wParam & 0xfff0) == SC_KEYMENU) // Disable ALT application menu
                 return 0;
             break;
-        case WM_CLOSE:  // For joining threads
-            isTryingToExit = true;
+        case WM_CLOSE:
+            exit(0);
             return 0;
         case WM_DESTROY:
             ::PostQuitMessage(0);
@@ -92,13 +89,6 @@ LRESULT __stdcall ImGUIManager::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPAR
         return ::DefWindowProcW(hWnd, msg, wParam, lParam);
     }
 }
-
-// -----------------------------------------------------------------------
-// -------------------------- GUI CORE -----------------------------------
-// -----------------------------------------------------------------------
-
-
-
 
 
 
@@ -281,7 +271,7 @@ int ImGUIManager::RunUI()
 			
             // Options bar
             ImGui::SetCursorPos(ImVec2(10, 10));
-			if (ImGui::BeginChild(1, ImVec2(70, (430 * main_scale))))
+			if (ImGui::BeginChild(1, ImVec2(70, (310 * main_scale))))
 			{
                 using tex = ImGUIManager::textures;
                 constexpr int y_base{ 10 };
@@ -301,37 +291,9 @@ int ImGUIManager::RunUI()
                     }
                 }
 
-                //Add organism
-                {
-                    ImGui::SetCursorPos(ImVec2(10, y_base + y_step));
-                    style.Colors[ImGuiCol_Button] = ImColor(0, 0, 0);
-                    if (ImGui::ImageButton("2", (ImTextureRef)tex::Add, ImVec2(43, 43)))
-                    {
-
-                    }
-                    if (ImGui::IsItemHovered())
-                    {
-                        ImGui::SetTooltip("Add organism");
-                    }
-                }
-
-                //Delete organism
-                {
-                    ImGui::SetCursorPos(ImVec2(10, y_base + y_step*2));
-                    style.Colors[ImGuiCol_Button] = ImColor(0, 0, 0);
-                    if (ImGui::ImageButton("3", (ImTextureRef)tex::Remove, ImVec2(43, 43)))
-                    {
-
-                    }
-                    if (ImGui::IsItemHovered())
-                    {
-                        ImGui::SetTooltip("Delete organism");
-                    }
-                }
-
                 //Clear world
                 {
-                    ImGui::SetCursorPos(ImVec2(10, y_base + y_step*3));
+                    ImGui::SetCursorPos(ImVec2(10, y_base + y_step));
                     style.Colors[ImGuiCol_Button] = ImColor(0, 0, 0);
                     if (ImGui::ImageButton("4", (ImTextureRef)tex::Clear, ImVec2(43, 43)))
                     {
@@ -349,7 +311,7 @@ int ImGUIManager::RunUI()
                     static int numOfOrganisms; //must be int for InputInt
                     static std::vector<char> possibleOrganisms;
 
-                    ImGui::SetCursorPos(ImVec2(10, y_base + y_step * 4));
+                    ImGui::SetCursorPos(ImVec2(10, y_base + y_step * 2));
                     style.Colors[ImGuiCol_Button] = ImColor(0, 0, 0);
                     if (ImGui::ImageButton("5", (ImTextureRef)tex::Randomize, ImVec2(43, 43)))
                     {
@@ -398,7 +360,7 @@ int ImGUIManager::RunUI()
 
                 //Export world
                 {
-                    ImGui::SetCursorPos(ImVec2(10, y_base + y_step * 5));
+                    ImGui::SetCursorPos(ImVec2(10, y_base + y_step * 3));
                     style.Colors[ImGuiCol_Button] = ImColor(0, 0, 0);
                     if (ImGui::ImageButton("6", (ImTextureRef)tex::Save, ImVec2(43, 43)))
                     {
@@ -413,12 +375,13 @@ int ImGUIManager::RunUI()
 
                 //Import world
                 {
-                    ImGui::SetCursorPos(ImVec2(10, y_base + y_step * 6));
+                    ImGui::SetCursorPos(ImVec2(10, y_base + y_step * 4));
                     style.Colors[ImGuiCol_Button] = ImColor(0, 0, 0);
                     if (ImGui::ImageButton("7", (ImTextureRef)tex::Load, ImVec2(43, 43)))
                     {
                         std::string path = FileHelpers::OpenFileDialog();
-                        world.readWorld(path);
+                        if (path.size())
+                            world.readWorld(path);
                     }
                     if (ImGui::IsItemHovered())
                     {
@@ -456,46 +419,158 @@ int ImGUIManager::RunUI()
                     drawList->AddLine(ImVec2(origin.x, py), ImVec2(origin.x + width * cellSize, py), IM_COL32(200, 200, 200, 50));
                 }
 
-                const auto& organisms = world.getOrganisms();
-                for (size_t i = 0; i < organisms.size(); ++i)
-                {
-                    const auto& org = organisms[i];
-                    
-                    Position p = org->getPosition();
+                //const auto& organisms = world.getOrganisms();
+                //for (size_t i = 0; i < organisms.size(); ++i)
+                //{
+                //    const auto& org = organisms[i];
+                //    
+                //    Position p = org->getPosition();
 
-                    float x = origin.x + p.getX() * cellSize;
-                    float y = origin.y + p.getY() * cellSize;
+                //    float x = origin.x + p.getX() * cellSize;
+                //    float y = origin.y + p.getY() * cellSize;
 
-                   // drawList->AddRectFilled(ImVec2(x, y), ImVec2(x + cellSize, y + cellSize), IM_COL32(0, 255, 0, 255));
+                //   // drawList->AddRectFilled(ImVec2(x, y), ImVec2(x + cellSize, y + cellSize), IM_COL32(0, 255, 0, 255));
 
-                    //tutaj jest duzo magicznych liczb bo ImageButton dodaje jakies niejasne marginesy
-                    ImGui::SetCursorScreenPos(ImVec2(x+0.5, y+0.5));
-                    std::string id = "organism:" + std::to_string(i);
-                    std::string popupid = "organism:" + std::to_string(i) + "popup";
-                    if (ImGui::ImageButton(id.c_str(), (ImTextureRef)org->getTexture(), ImVec2(cellSize-8.3, cellSize-6.25)))
+                //    //tutaj jest duzo magicznych liczb bo ImageButton dodaje jakies niejasne marginesy
+                //    ImGui::SetCursorScreenPos(ImVec2(x+0.5, y+0.5));
+                //    std::string id = "organism:" + std::to_string(i);
+                //    std::string popupid = "organism: " + std::to_string(i) + " popup";
+                //    if (ImGui::ImageButton(id.c_str(), (ImTextureRef)org->getTexture(), ImVec2(cellSize-8.3, cellSize-6.25)))
+                //    {
+                //        ImGui::OpenPopup(popupid.c_str());
+                //    }
+
+                //    if (ImGui::BeginPopupModal(popupid.c_str(), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize))
+                //    {
+                //        if (ImGui::Button("Remove"))
+                //        {
+                //            world.removeOrganism(i);
+                //            ImGui::CloseCurrentPopup();
+                //        }
+
+                //        ImGui::SameLine();
+
+                //        std::string historypopupid = "organism " + std::to_string(i) + " history";
+                //        if (ImGui::Button("Show history"))
+                //        {
+                //            ImGui::OpenPopup(historypopupid.c_str());
+                //        }
+
+                //        if (ImGui::BeginPopupModal(historypopupid.c_str(), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize))
+                //        {
+                //            ImGui::Text(org->printHistory().c_str());
+                //            if (ImGui::Button("Close"))
+                //                ImGui::CloseCurrentPopup();
+
+                //            ImGui::EndPopup();
+                //        }
+
+                //        if (ImGui::Button("Cancel"))
+                //        {
+                //            ImGui::CloseCurrentPopup();
+                //        }
+
+                //        ImGui::EndPopup();
+                //    }
+                //}
+
+                for (int pos_x = 0; pos_x < world.getWorldX(); ++pos_x)
+                    for (int pos_y = 0; pos_y < world.getWorldY(); ++pos_y)
                     {
-                        ImGui::OpenPopup(popupid.c_str());
-                    }
+                        Position pos = Position(pos_x, pos_y);
+                        
+                        float x = origin.x + pos.getX() * cellSize;
+                        float y = origin.y + pos.getY() * cellSize;
 
-                    if (ImGui::BeginPopupModal(popupid.c_str(), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize))
-                    {
-                        if (ImGui::Button("Remove"))
+                        //tutaj jest duzo magicznych liczb bo ImageButton dodaje jakies niejasne marginesy
+                        ImGui::SetCursorScreenPos(ImVec2(x + 0.5, y + 0.5));
+
+                        std::string id = '(' + std::to_string(pos.getX()) + ", " + std::to_string(pos.getY()) + ')';
+
+                        size_t i{};
+                        if (world.getOrganismFromPosition(pos.getX(), pos.getY(), &i))
                         {
-                            world.removeOrganism(i);
-                            ImGui::CloseCurrentPopup();
+                            auto& org = world.getOrganisms()[i];
+                            std::string popupid = id + " organism";
+                            if (ImGui::ImageButton(id.c_str(), (ImTextureRef)org->getTexture(), ImVec2(cellSize - 8.3, cellSize - 6.25)))
+                            {
+                                ImGui::OpenPopup(popupid.c_str());
+                            }
+
+                            if (ImGui::BeginPopupModal(popupid.c_str(), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize))
+                            {
+                                if (ImGui::Button("Remove"))
+                                {
+                                    world.removeOrganism(i);
+                                    ImGui::CloseCurrentPopup();
+                                }
+
+                                ImGui::SameLine();
+
+                                std::string historypopupid = "organism " + std::to_string(i) + " history";
+                                if (ImGui::Button("Show history"))
+                                {
+                                    ImGui::OpenPopup(historypopupid.c_str());
+                                }
+
+                                if (ImGui::BeginPopupModal(historypopupid.c_str(), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize))
+                                {
+                                    ImGui::Text(org->printHistory().c_str());
+                                    if (ImGui::Button("Close"))
+                                        ImGui::CloseCurrentPopup();
+
+                                    ImGui::EndPopup();
+                                }
+
+                                if (ImGui::Button("Cancel"))
+                                {
+                                    ImGui::CloseCurrentPopup();
+                                }
+
+                                ImGui::EndPopup();
+                            }
                         }
-
-                        ImGui::SameLine();
-
-                        if (ImGui::Button("Cancel"))
+                        else
                         {
-                            ImGui::CloseCurrentPopup();
+                            //free positon
+                            std::string popupid = id + ' ';
+                            if (ImGui::ImageButton(id.c_str(), (ImTextureRef)textures::Free, ImVec2(cellSize - 8.3, cellSize - 6.25)))
+                            {
+                                ImGui::OpenPopup(popupid.c_str());
+                            }
+
+                            std::string addOrgPopupId = "Adding organism at: " + id;
+                            if (ImGui::BeginPopupModal(popupid.c_str(), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize))
+                            {
+                                if (ImGui::Button("Add Organism"))
+                                {
+                                    ImGui::OpenPopup(addOrgPopupId.c_str());
+                                }
+
+                                static std::string sign(2, 0);
+                                if (ImGui::BeginPopupModal(addOrgPopupId.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+                                {
+                                    ImGui::InputText("Select organism sign(one of 'G', 'S', 'D', 'W', 'T')", sign.data(), sign.size());
+                                    if (ImGui::Button("OK"))
+                                    {
+                                        auto org = OrganismFactoryRegistry::getFactory(sign[0])->create();
+                                        org->setPosition(pos);
+                                        world.addOrganism(org);
+
+                                        ImGui::CloseCurrentPopup();
+                                    }
+
+                                    ImGui::EndPopup();
+                                }
+
+                                if (ImGui::Button("Cancel"))
+                                {
+                                    ImGui::CloseCurrentPopup();
+                                }
+                                ImGui::EndPopup();
+                            }
                         }
-
-                        ImGui::EndPopup();
                     }
-                }
-
                 ImGui::EndChild();
             }
 			ImGui::End();
