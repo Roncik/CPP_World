@@ -328,7 +328,7 @@ int ImGUIManager::RunUI()
                         ImGui::InputInt("World height", &worldY);
                         ImGui::InputInt("Number of created organisms", &numOfOrganisms);
 
-                        static std::string signs(1000, 0);
+                        static std::string signs(6, 0);
                         ImGui::InputText("Possible organisms signs('G', 'S', 'D', 'W', 'T')", signs.data(), signs.size());
 
 
@@ -555,6 +555,10 @@ int ImGUIManager::RunUI()
                                     {
                                         auto org = OrganismFactoryRegistry::getFactory(sign[0])->create();
                                         org->setPosition(pos);
+                                        org->setSelfRecord(std::pair<int, int>(world.getTurn(), -1));
+                                        auto history = org->getHistory();
+                                        history[0]->first = world.getTurn();
+                                        history[0]->second = -1;
                                         world.addOrganism(org);
 
                                         ImGui::CloseCurrentPopup();
