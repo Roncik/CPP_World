@@ -590,27 +590,6 @@ int ImGUIManager::RunUI()
 			ImGui::End();
 		}
 
-
-    
-        
-        // Create the always-visible main menu bar over the main viewport
-        /*if (ImGui::BeginMainMenuBar())
-        {            
-            if (ImGui::BeginMenu("Panels"))
-            {
-                if (ImGui::MenuItem("Active protection config", NULL, mwData.showActiveProtectionConfigPanel))                
-                    mwData.showActiveProtectionConfigPanel = !mwData.showActiveProtectionConfigPanel;                                
-                if (ImGui::MenuItem("Active protection console output", NULL, mwData.showActiveProtectionOutputPanel))
-                    mwData.showActiveProtectionOutputPanel = !mwData.showActiveProtectionOutputPanel;                                
-                ImGui::EndMenu();
-            }
-            ImGui::EndMainMenuBar();
-        }*/           
-
-
-
-
-
         // Rendering
         ImGui::EndFrame();
         ImGUIManager::g_pd3dDevice->SetRenderState(D3DRS_ZENABLE, FALSE);

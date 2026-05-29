@@ -203,7 +203,7 @@ void World::readWorld(std::string fileName)
 		throw std::runtime_error("couldn't open file for import");
 	}
 
-	organisms.clear();
+	this->clear();
 
 	/*
 	struktura serializacji:
@@ -463,7 +463,7 @@ void World::Randomize(int worldX, int worldY, size_t numOfOrganisms, const std::
 
 	srand(static_cast<unsigned int>(time(0)));
 	
-	organisms.clear();
+	this->clear();
 
 	setWorldX(worldX);
 	setWorldY(worldY);
