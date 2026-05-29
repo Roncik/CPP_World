@@ -250,7 +250,7 @@ void World::readWorld(std::string fileName)
 		newOrganism->setPosition(position);
 
 		// selfRecord
-		auto selfRecord = Organism().getSelfRecord();
+		auto selfRecord = *Organism().getSelfRecord().get();
 		my_file.read((char*)&selfRecord, sizeof(selfRecord));
 		newOrganism->setSelfRecord(selfRecord);
 
@@ -260,7 +260,7 @@ void World::readWorld(std::string fileName)
 		newOrganism->clearHistory();
 		while (size--)
 		{
-			auto record = Organism().getSelfRecord();
+			auto record = *Organism().getSelfRecord().get();
 			my_file.read((char*)&record, sizeof(record));
 			newOrganism->addFamilyRecord(record);
 		}

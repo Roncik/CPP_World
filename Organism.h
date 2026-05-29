@@ -46,7 +46,7 @@ public:
 	Position getPosition();
 	void setPosition(Position position);
 
-	std::pair<int, int> getSelfRecord();
+	std::shared_ptr<std::pair<int, int>> getSelfRecord();
 	void setSelfRecord(std::pair<int, int> selfRecord);
 
 	void addFamilyRecord(const std::pair<int, int>& record);

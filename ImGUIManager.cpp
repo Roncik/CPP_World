@@ -255,23 +255,25 @@ int ImGUIManager::RunUI()
 			style.Colors[ImGuiCol_Border] = ImColor(0, 0, 0, 255);
 		}
 
+        static bool mWinOpen{ false };
+        if (mWinOpen) 
+            ImGui::SetNextWindowSize({ (783 * main_scale), (560 * main_scale) });
         ImGui::SetNextWindowPos({ 0,0 }, ImGuiCond_Once);
-        ImGui::SetNextWindowSize({ (783 * main_scale), (560 * main_scale) });
         ImGui::SetNextWindowBgAlpha(1.0f);
-
-		if (ImGui::Begin("mainWindow", (bool*)0,
+		if (ImGui::Begin("mainWindow", &mWinOpen,
 			ImGuiWindowFlags_NoResize |
 			ImGuiWindowFlags_NoSavedSettings |
 			ImGuiWindowFlags_NoCollapse |
 			ImGuiWindowFlags_NoScrollbar |
 			ImGuiWindowFlags_NoTitleBar |
             ImGuiWindowFlags_NoMove |
-            ImGuiWindowFlags_NoNav))
+            ImGuiWindowFlags_NoNav
+            ))
 		{
 			
             // Options bar
             ImGui::SetCursorPos(ImVec2(10, 10));
-			if (ImGui::BeginChild(1, ImVec2(70, (310 * main_scale))))
+			if (ImGui::BeginChild(1, ImVec2(70, (310 * main_scale))), ImGuiWindowFlags_AlwaysAutoResize)
 			{
                 using tex = ImGUIManager::textures;
                 constexpr int y_base{ 10 };
@@ -396,7 +398,7 @@ int ImGUIManager::RunUI()
             // World window
             //style.Colors[ImGuiCol_ChildBg] = 
             ImGui::SetCursorPos(ImVec2(90, 10));
-            if (ImGui::BeginChild(2, ImVec2(684, (540 * main_scale))))
+            if (ImGui::BeginChild(2, ImVec2(684, (540 * main_scale))), ImGuiWindowFlags_AlwaysAutoResize)
             {
                 ImDrawList* drawList = ImGui::GetWindowDrawList();
                 ImGui::SetCursorPos(ImVec2(10, 10));
@@ -556,9 +558,17 @@ int ImGUIManager::RunUI()
                                         auto org = OrganismFactoryRegistry::getFactory(sign[0])->create();
                                         org->setPosition(pos);
                                         org->setSelfRecord(std::pair<int, int>(world.getTurn(), -1));
-                                        auto history = org->getHistory();
+                                        
+                                        org->clearHistory();
+                                        std::vector<std::shared_ptr<std::pair<int, int>>> newHistory;
+                                        newHistory.push_back(org->getSelfRecord());
+                                        org->setHistory(newHistory);
+                                        
+                                        /*auto history = org->getHistory();
                                         history[0]->first = world.getTurn();
-                                        history[0]->second = -1;
+                                        history[0]->second = -1;*/
+
+
                                         world.addOrganism(org);
 
                                         ImGui::CloseCurrentPopup();

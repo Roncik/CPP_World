@@ -51,9 +51,9 @@ void Organism::setPosition(Position position)
 	this->position = position;
 }
 
-std::pair<int, int> Organism::getSelfRecord()
+std::shared_ptr<std::pair<int, int>> Organism::getSelfRecord()
 {
-	return *this->selfRecord.get();
+	return this->selfRecord;
 }
 
 void Organism::setSelfRecord(std::pair<int, int> selfRecord)
