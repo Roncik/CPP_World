@@ -102,7 +102,7 @@ int ImGUIManager::RunUI()
     // Create application window
     WNDCLASSEXW wc = { sizeof(wc), CS_CLASSDC, ImGUIManager::WndProc, 0L, 0L, GetModuleHandle(nullptr), nullptr, nullptr, nullptr, nullptr, L"World simulator", nullptr };
     ::RegisterClassExW(&wc);
-    HWND hwnd = ::CreateWindowW(wc.lpszClassName, L"World simulator", WS_OVERLAPPEDWINDOW, 100, 100, (int)(800 * main_scale), (int)(600 * main_scale), nullptr, nullptr, wc.hInstance, nullptr);
+    HWND hwnd = ::CreateWindowW(wc.lpszClassName, L"World simulator", WS_OVERLAPPEDWINDOW, 100, 10, (int)(1200 * main_scale), (int)(1000 * main_scale), nullptr, nullptr, wc.hInstance, nullptr);
 
     // Initialize Direct3D
     if (!CreateDeviceD3D(hwnd))
@@ -257,7 +257,7 @@ int ImGUIManager::RunUI()
 
         static bool mWinOpen{ false };
         if (mWinOpen) 
-            ImGui::SetNextWindowSize({ (783 * main_scale), (560 * main_scale) });
+            ImGui::SetNextWindowSize({ (1183 * main_scale), (960 * main_scale) });
         ImGui::SetNextWindowPos({ 0,0 }, ImGuiCond_Once);
         ImGui::SetNextWindowBgAlpha(1.0f);
 		if (ImGui::Begin("mainWindow", &mWinOpen,
@@ -398,14 +398,14 @@ int ImGUIManager::RunUI()
             // World window
             //style.Colors[ImGuiCol_ChildBg] = 
             ImGui::SetCursorPos(ImVec2(90, 10));
-            if (ImGui::BeginChild(2, ImVec2(684, (540 * main_scale))), ImGuiWindowFlags_AlwaysAutoResize)
+            if (ImGui::BeginChild(2, ImVec2(1084, (940 * main_scale))), ImGuiWindowFlags_AlwaysAutoResize)
             {
                 ImDrawList* drawList = ImGui::GetWindowDrawList();
                 ImGui::SetCursorPos(ImVec2(10, 10));
                 ImVec2 origin = ImGui::GetCursorScreenPos();
                 ImGui::Dummy(ImVec2(0, 0));
 
-                constexpr float cellSize = 60.0f;
+                constexpr float cellSize = 80.0f;
                 int width = world.getWorldX();
                 int height = world.getWorldY();
 
