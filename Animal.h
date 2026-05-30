@@ -6,7 +6,7 @@
 class Animal : public virtual Organism
 {
 protected:
-	bool isCarnivore{ false };
+	bool _isCarnivore{ false };
 public:
 	virtual ~Animal() = default;
 	

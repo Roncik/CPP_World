@@ -81,7 +81,6 @@ LRESULT __stdcall ImGUIManager::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPAR
             break;
         case WM_CLOSE:
             exit(0);
-            return 0;
         case WM_DESTROY:
             ::PostQuitMessage(0);
             return 0;
@@ -129,9 +128,11 @@ int ImGUIManager::RunUI()
     //ImGui::StyleColorsLight();
 
     // Setup scaling
-    ImGuiStyle& style = ImGui::GetStyle();
-    style.ScaleAllSizes(main_scale);        // Bake a fixed style scale. (until we have a solution for dynamic style scaling, changing this requires resetting Style + calling this again)
-    style.FontScaleDpi = main_scale;        // Set initial font scale. (using io.ConfigDpiScaleFonts=true makes this unnecessary. We leave both here for documentation purpose)
+    {
+        ImGuiStyle& style = ImGui::GetStyle();
+        style.ScaleAllSizes(main_scale);        // Bake a fixed style scale. (until we have a solution for dynamic style scaling, changing this requires resetting Style + calling this again)
+        style.FontScaleDpi = main_scale;        // Set initial font scale. (using io.ConfigDpiScaleFonts=true makes this unnecessary. We leave both here for documentation purpose)
+    }
 
     // Setup Platform/Renderer backends
     ImGui_ImplWin32_Init(hwnd);
@@ -173,9 +174,6 @@ int ImGUIManager::RunUI()
 
     // Used when rendering
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);         
-
-    // Used when user wants to skip waiting for threads to join when closing the program
-    bool isForcingQuit = false;
 
     // Main loop
     bool done = false;
@@ -485,7 +483,7 @@ int ImGUIManager::RunUI()
                         float y = origin.y + pos.getY() * cellSize;
 
                         //tutaj jest duzo magicznych liczb bo ImageButton dodaje jakies niejasne marginesy
-                        ImGui::SetCursorScreenPos(ImVec2(x + 0.9, y + 0.9));
+                        ImGui::SetCursorScreenPos(ImVec2(x + 0.9f, y + 0.9f));
 
                         std::string id = '(' + std::to_string(pos.getX()) + ", " + std::to_string(pos.getY()) + ')';
 
@@ -494,7 +492,7 @@ int ImGUIManager::RunUI()
                         {
                             auto& org = world.getOrganisms()[i];
                             std::string popupid = id + " organism";
-                            if (ImGui::ImageButton(id.c_str(), (ImTextureRef)org->getTexture(), ImVec2(cellSize - 8.7, cellSize - 6.65)))
+                            if (ImGui::ImageButton(id.c_str(), (ImTextureRef)org->getTexture(), ImVec2(cellSize - 8.7f, cellSize - 6.65f)))
                             {
                                 ImGui::OpenPopup(popupid.c_str());
                             }
@@ -536,7 +534,7 @@ int ImGUIManager::RunUI()
                         {
                             //free positon
                             std::string popupid = id + ' ';
-                            if (ImGui::ImageButton(id.c_str(), (ImTextureRef)textures::Empty, ImVec2(cellSize - 8.7, cellSize - 6.65)))
+                            if (ImGui::ImageButton(id.c_str(), (ImTextureRef)textures::Empty, ImVec2(cellSize - 8.7f, cellSize - 6.65f)))
                             {
                                 ImGui::OpenPopup(popupid.c_str());
                             }

@@ -4,9 +4,9 @@
 class World
 {
 private:
-	int worldX;
-	int worldY;
-	int turn{ 0 };
+	int _worldX;
+	int _worldY;
+	int _turn{ 0 };
 	
 	char separator{ '.' };
 

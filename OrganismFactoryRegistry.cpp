@@ -26,6 +26,6 @@ std::unique_ptr<OrganismFactory> OrganismFactoryRegistry::getFactory(char sign)
 
         case 'T': return std::make_unique<ToadstoolFactory>(); //Toadstool
 
-        default: throw std::logic_error("Factory not found"); return nullptr;
+        default: throw std::logic_error("Factory not found");
     }
 }

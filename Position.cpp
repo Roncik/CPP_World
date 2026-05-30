@@ -13,10 +13,10 @@ int Position::getX()
 	return this->x;
 }
 
-void Position::setX(int x)
+void Position::setX(int newX)
 {
-	if (x >= 0)
-		this->x = x;
+	if (newX >= 0)
+		this->x = newX;
 	else
 		this->x = 0;
 }
@@ -26,10 +26,10 @@ int Position::getY()
 	return this->y;
 }
 
-void Position::setY(int y)
+void Position::setY(int newY)
 {
-	if (y >= 0)
-		this->y = y;
+	if (newY >= 0)
+		this->y = newY;
 	else
 		this->y = 0;
 }

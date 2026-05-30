@@ -55,27 +55,27 @@ World::World(int worldX, int worldY)
 
 int World::getWorldX()
 {
-	return this->worldX;
+	return this->_worldX;
 }
 
-void World::setWorldX(int worldX)
+void World::setWorldX(int newWorldX)
 {
-	this->worldX = worldX;
+	this->_worldX = newWorldX;
 }
 
 int World::getWorldY()
 {
-	return this->worldY;
+	return this->_worldY;
 }
 
-void World::setWorldY(int worldY)
+void World::setWorldY(int newWorldY)
 {
-	this->worldY = worldY;
+	this->_worldY = newWorldY;
 }
 
 int World::getTurn()
 {
-	return this->turn;
+	return this->_turn;
 }
 
 void World::addOrganism(std::unique_ptr<Organism>& organism)
@@ -159,16 +159,16 @@ void World::makeTurn()
 		}
 	}
 
-	++turn;
+	++_turn;
 }
 
 std::string World::serialize()
 {
 	std::stringstream ss{};
 	// tutaj trzeba uzyc write zeby zawsze zapisac odpowiednia ta sama ilosc bajtow - np worldX = 6 zapisze sie tylko jeden bajt przy <<
-	ss.write((char*)&this->worldX, sizeof(this->worldX));
-	ss.write((char*)&this->worldY, sizeof(this->worldY));
-	ss.write((char*)&this->turn, sizeof(this->turn));
+	ss.write((char*)&this->_worldX, sizeof(this->_worldX));
+	ss.write((char*)&this->_worldY, sizeof(this->_worldY));
+	ss.write((char*)&this->_turn, sizeof(this->_turn));
 
 	auto organisms_size = this->organisms.size();
 	ss.write((char*)&organisms_size, sizeof(organisms_size));
@@ -224,13 +224,13 @@ void World::readWorld(std::string fileName)
 	*/
 
 	// worldX
-	my_file.read((char*)&worldX, sizeof(worldX));
+	my_file.read((char*)&_worldX, sizeof(_worldX));
 
 	// worldY
-	my_file.read((char*)&worldY, sizeof(worldY));
+	my_file.read((char*)&_worldY, sizeof(_worldY));
 
 	// turn
-	my_file.read((char*)&turn, sizeof(turn));
+	my_file.read((char*)&_turn, sizeof(_turn));
 
 	// organisms
 	size_t organisms_size;
@@ -488,8 +488,8 @@ void World::Randomize(int worldX, int worldY, size_t numOfOrganisms, const std::
 
 void World::clear()
 {
-	this->worldX = 0;
-	this->worldY = 0;
-	this->turn = 0;
+	this->_worldX = 0;
+	this->_worldY = 0;
+	this->_turn = 0;
 	this->organisms.clear();
 }

@@ -3,67 +3,67 @@
 
 int Organism::getPower()
 {
-	return this->power;
+	return this->_power;
 }
 
-void Organism::setPower(int power)
+void Organism::setPower(int newPower)
 {
-	this->power = power;
+	this->_power = newPower;
 }
 
 int Organism::getInitiative()
 {
-	return this->initiative;
+	return this->_initiative;
 }
 
-void Organism::setInitiative(int initiative)
+void Organism::setInitiative(int newInitiative)
 {
-	this->initiative = initiative;
+	this->_initiative = newInitiative;
 }
 
 int Organism::getLiveLength()
 {
-	return this->liveLength;
+	return this->_liveLength;
 }
 
-void Organism::setLiveLength(int liveLength)
+void Organism::setLiveLength(int newLiveLength)
 {
-	this->liveLength = liveLength;
+	this->_liveLength = newLiveLength;
 }
 
 int Organism::getPowerToReproduce()
 {
-	return this->powerToReproduce;
+	return this->_powerToReproduce;
 }
 
-void Organism::setPowerToReproduce(int powerToReproduce)
+void Organism::setPowerToReproduce(int newPowerToReproduce)
 {
-	this->powerToReproduce = powerToReproduce;
+	this->_powerToReproduce = newPowerToReproduce;
 }
 
 Position Organism::getPosition()
 {
-	return this->position;
+	return this->_position;
 }
 
-void Organism::setPosition(Position position)
+void Organism::setPosition(Position newPosition)
 {
-	this->position = position;
+	this->_position = newPosition;
 }
 
 std::shared_ptr<std::pair<int, int>> Organism::getSelfRecord()
 {
-	return this->selfRecord;
+	return this->_selfRecord;
 }
 
-void Organism::setSelfRecord(std::pair<int, int> selfRecord)
+void Organism::setSelfRecord(std::pair<int, int> newSelfRecord)
 {
-	this->selfRecord = std::make_shared<std::pair<int, int>>(selfRecord);
+	this->_selfRecord = std::make_shared<std::pair<int, int>>(newSelfRecord);
 }
 
 void Organism::addFamilyRecord(const std::pair<int, int>& record)
 {
-	familyHistory.push_back(std::make_shared<std::pair<int, int>>(record));
+	_familyHistory.push_back(std::make_shared<std::pair<int, int>>(record));
 }
 
 std::string Organism::toString()
@@ -75,68 +75,68 @@ std::string Organism::toString()
 
 char Organism::getSign()
 {
-	return this->sign;
+	return this->_sign;
 }
 
 void Organism::setSign(char spec)
 {
-	this->sign = spec;
+	this->_sign = spec;
 }
 
 bool Organism::getIsAnimal()
 {
-	return this->isAnimal;
+	return this->_isAnimal;
 }
 
-void Organism::setIsAnimal(bool isAnimal)
+void Organism::setIsAnimal(bool newIsAnimal)
 {
-	this->isAnimal = isAnimal;
+	this->_isAnimal = newIsAnimal;
 }
 
 void Organism::initHistory(Organism* parent, int turnNum)
 {
-	selfRecord = std::make_shared<std::pair<int, int>>();
-	selfRecord->first = turnNum;
-	selfRecord->second = -1; // -1 = organizm jeszcze zyje
+	_selfRecord = std::make_shared<std::pair<int, int>>();
+	_selfRecord->first = turnNum;
+	_selfRecord->second = -1; // -1 = organizm jeszcze zyje
 
 	if (parent)
-		familyHistory = parent->familyHistory;
+		_familyHistory = parent->_familyHistory;
 
-	familyHistory.push_back(selfRecord);
+	_familyHistory.push_back(_selfRecord);
 }
 
 void Organism::clearHistory()
 {
-	this->familyHistory.clear();
+	this->_familyHistory.clear();
 }
 
 std::vector<std::shared_ptr<std::pair<int, int>>> Organism::getHistory()
 {
-	return this->familyHistory;
+	return this->_familyHistory;
 }
 
 void Organism::setHistory(std::vector<std::shared_ptr<std::pair<int, int>>> newHistory)
 {
-	this->familyHistory = newHistory;
+	this->_familyHistory = newHistory;
 }
 
 void Organism::logDeathTurn(int turnNum)
 {
-	selfRecord->second = turnNum;
+	_selfRecord->second = turnNum;
 }
 
 void Organism::initFamily(Organism* parent)
 {
 	if (parent)
-		this->family = parent->family;
+		this->_family = parent->_family;
 	else
-		this->family = std::make_shared<std::vector<Organism*>>();
-	this->family->push_back(this);
+		this->_family = std::make_shared<std::vector<Organism*>>();
+	this->_family->push_back(this);
 }
 
 bool Organism::isFamily(Organism* other)
 {
-	return std::find(this->family->begin(), this->family->end(), other) != this->family->end();
+	return std::find(this->_family->begin(), this->_family->end(), other) != this->_family->end();
 }
 
 std::string Organism::printHistory()
@@ -144,10 +144,10 @@ std::string Organism::printHistory()
 	std::stringstream ss;
 
 	ss << "History: \n";
-	for (size_t i = 0; i < familyHistory.size(); ++i)
+	for (size_t i = 0; i < _familyHistory.size(); ++i)
 	{
-		auto& entry = familyHistory[i];
-		ss << '(' << entry->first << ", " << entry->second << ')' << ' ' << (i == (familyHistory.size() - 1) ? "Current" : "Relative") << '\n';
+		auto& entry = _familyHistory[i];
+		ss << '(' << entry->first << ", " << entry->second << ')' << ' ' << (i == (_familyHistory.size() - 1) ? "Current" : "Relative") << '\n';
 	}
 
 	return ss.str();
@@ -160,38 +160,38 @@ std::string Organism::serialize()
 
 	//znak na poczatku zeby wiadomo bylo od razu jaki organizm trzeba stworzyc
 	//sign
-	ss.write((char*)&this->sign, sizeof(this->sign));
+	ss.write((char*)&this->_sign, sizeof(this->_sign));
 
 	//position
-	ss.write((char*)&this->position, sizeof(this->position));
+	ss.write((char*)&this->_position, sizeof(this->_position));
 
 	//selfRecord
-	auto& selfrec = *selfRecord.get();
+	auto& selfrec = *_selfRecord.get();
 	ss.write((char*)&selfrec, sizeof(selfrec));
 
 	//familyHistory
-	size_t size = familyHistory.size();
+	size_t size = _familyHistory.size();
 	ss.write((char*)&size, sizeof(size));
-	std::for_each(familyHistory.begin(), familyHistory.end(), [&](auto& cur)
+	std::for_each(_familyHistory.begin(), _familyHistory.end(), [&](auto& cur)
 		{
 			auto& rec = *cur.get();
 			ss.write((char*)&rec, sizeof(rec));
 		});
 
 	//power
-	ss.write((char*)&this->power, sizeof(this->power));
+	ss.write((char*)&this->_power, sizeof(this->_power));
 
 	//initiative
-	ss.write((char*)&this->initiative, sizeof(this->initiative));
+	ss.write((char*)&this->_initiative, sizeof(this->_initiative));
 
 	//liveLength
-	ss.write((char*)&this->liveLength, sizeof(this->liveLength));
+	ss.write((char*)&this->_liveLength, sizeof(this->_liveLength));
 
 	//powerToReproduce
-	ss.write((char*)&this->powerToReproduce, sizeof(this->powerToReproduce));
+	ss.write((char*)&this->_powerToReproduce, sizeof(this->_powerToReproduce));
 
 	//isAnimal
-	ss.write((char*)&this->isAnimal, sizeof(this->isAnimal));
+	ss.write((char*)&this->_isAnimal, sizeof(this->_isAnimal));
 
 	//isCarnivore
 	bool isCarnivore{ false };
