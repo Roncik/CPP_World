@@ -7,6 +7,6 @@ class AnimalFactory : public OrganismFactory
 public:
 	virtual ~AnimalFactory() = default;
 	
-	std::unique_ptr<Organism> create() override;
+	std::unique_ptr<Organism> create() override = 0;
 };
 

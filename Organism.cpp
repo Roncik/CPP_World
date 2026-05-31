@@ -66,13 +66,6 @@ void Organism::addFamilyRecord(const std::pair<int, int>& record)
 	_familyHistory.push_back(std::make_shared<std::pair<int, int>>(record));
 }
 
-std::string Organism::toString()
-{
-	return "{ species: " + std::to_string(this->getSign()) + 
-		", power: " + std::to_string(getPower()) +
-			", position: " + getPosition().toString() + "}";
-}
-
 char Organism::getSign()
 {
 	return this->_sign;

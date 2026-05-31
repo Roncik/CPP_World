@@ -7,7 +7,7 @@ class Plant : public virtual Organism
 {
 	public:
 		virtual ~Plant() = default;
-	
-		Plant() : Organism('P') {}
+
+		std::string toString() override = 0;
 };
 

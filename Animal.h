@@ -10,11 +10,14 @@ protected:
 public:
 	virtual ~Animal() = default;
 	
-	Animal() : Organism('A') { setIsAnimal(true); } 
+	Animal() { setIsAnimal(true); } 
 
 	bool getIsCarnivore();
 	void setIsCarnivore(bool isCarnivore);
 
 	std::string serialize();
+
+
+	std::string toString() override = 0;
 };
 

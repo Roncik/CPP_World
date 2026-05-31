@@ -2,6 +2,8 @@
 #include "World.h"
 #include "OrganismFactoryRegistry.h"
 #include "Animal.h"
+#include "Plant.h"
+#include "Grass.h"
 
 bool World::getOrganismFromPosition(int x, int y, size_t* index)
 {	
@@ -236,21 +238,22 @@ void World::readWorld(std::string fileName)
 	size_t organisms_size;
 	my_file.read((char*)&organisms_size, sizeof(organisms_size));
 
+	auto orgInstance = Grass();
 	for (size_t i = 0; i < organisms_size; ++i)
 	{
 		// sign
-		auto sign = Organism().getSign(); // trik zeby auto sign zawsze byl tym samym typem co w Organism
+		auto sign = orgInstance.getSign(); // trik zeby auto sign zawsze byl tym samym typem co w Organism
 		my_file.read((char*)&sign, sizeof(sign));
 		std::unique_ptr<Organism> newOrganism = OrganismFactoryRegistry::getFactory(sign)->create();
 		newOrganism->setSign(sign);
 
 		// position
-		auto position = Organism().getPosition();
+		auto position = orgInstance.getPosition();
 		my_file.read((char*)&position, sizeof(position));
 		newOrganism->setPosition(position);
 
 		// selfRecord
-		auto selfRecord = *Organism().getSelfRecord().get();
+		auto selfRecord = *orgInstance.getSelfRecord().get();
 		my_file.read((char*)&selfRecord, sizeof(selfRecord));
 		newOrganism->setSelfRecord(selfRecord);
 
@@ -260,33 +263,33 @@ void World::readWorld(std::string fileName)
 		newOrganism->clearHistory();
 		while (size--)
 		{
-			auto record = *Organism().getSelfRecord().get();
+			auto record = *orgInstance.getSelfRecord().get();
 			my_file.read((char*)&record, sizeof(record));
 			newOrganism->addFamilyRecord(record);
 		}
 
 		// power
-		auto power = Organism().getPower();
+		auto power = orgInstance.getPower();
 		my_file.read((char*)&power, sizeof(power));
 		newOrganism->setPower(power);
 
 		// initiative
-		auto initiative = Organism().getInitiative();
+		auto initiative = orgInstance.getInitiative();
 		my_file.read((char*)&initiative, sizeof(initiative));
 		newOrganism->setInitiative(initiative);
 
 		// liveLength
-		auto liveLength = Organism().getLiveLength();
+		auto liveLength = orgInstance.getLiveLength();
 		my_file.read((char*)&liveLength, sizeof(liveLength));
 		newOrganism->setLiveLength(liveLength);
 
 		// powerToReproduce
-		auto powerToReproduce = Organism().getPowerToReproduce();
+		auto powerToReproduce = orgInstance.getPowerToReproduce();
 		my_file.read((char*)&powerToReproduce, sizeof(powerToReproduce));
 		newOrganism->setPowerToReproduce(powerToReproduce);
 
 		// isAnimal
-		auto isAnimal = Organism().getIsAnimal();
+		auto isAnimal = orgInstance.getIsAnimal();
 		my_file.read((char*)&isAnimal, sizeof(isAnimal));
 		newOrganism->setIsAnimal(isAnimal);
 
@@ -301,7 +304,7 @@ void World::readWorld(std::string fileName)
 		else
 		{
 			// i tak musimy odczytac bool zeby przesunac 'kursor odczytu' dalej
-			auto dummy = Organism().getIsAnimal();
+			auto dummy = orgInstance.getIsAnimal();
 			my_file.read((char*)&dummy, sizeof(dummy));
 		}
 

@@ -9,5 +9,7 @@ public:
 	Grass() : Organism(0, 0, 6, 3, 'G') {}
 
 	IDirect3DTexture9* getTexture() override;
+
+	std::string toString() override;
 };
 
