@@ -398,8 +398,12 @@ int ImGUIManager::RunUI()
             ImGui::SetCursorPos(ImVec2(90, 10));
             if (ImGui::BeginChild(2, ImVec2(1084, (940 * main_scale))), ImGuiWindowFlags_AlwaysAutoResize)
             {
-                ImDrawList* drawList = ImGui::GetWindowDrawList();
                 ImGui::SetCursorPos(ImVec2(10, 10));
+                std::string turnMsg = "Turn: " + std::to_string(world.getTurn());
+                ImGui::Text(turnMsg.c_str());
+                
+                ImDrawList* drawList = ImGui::GetWindowDrawList();
+                ImGui::SetCursorPos(ImVec2(10, 30));
                 ImVec2 origin = ImGui::GetCursorScreenPos();
                 ImGui::Dummy(ImVec2(0, 0));
 
