@@ -254,6 +254,7 @@ int ImGUIManager::RunUI()
 		}
 
         static bool mWinOpen{ false };
+        main_scale = 1.f;
         if (mWinOpen) 
             ImGui::SetNextWindowSize({ (1183 * main_scale), (960 * main_scale) });
         ImGui::SetNextWindowPos({ 0,0 }, ImGuiCond_Once);

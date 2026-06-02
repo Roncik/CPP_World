@@ -5,13 +5,16 @@
 class Organism
 {
 private:
+	inline static unsigned int _global_id_counter{ 0 };
+
 	Position _position;
 
 protected:
-	std::shared_ptr<std::pair<int, int>> _selfRecord;
+	unsigned int _id{ 0 };
 
+	std::shared_ptr<std::pair<int, int>> _selfRecord;
 	std::vector<std::shared_ptr<std::pair<int, int>>> _familyHistory{}; // historia to lista par; tur urodzin(1) i śmierci(2) przodków
-	std::shared_ptr<std::vector<Organism*>> _family;
+	std::shared_ptr<std::vector<unsigned int>> _family;
 
 	// Parametry organizmu - ustawia je organizm indywidualnie
 	int _power;
@@ -22,7 +25,7 @@ protected:
 	bool _isAnimal{ false };
 public:
 	Organism(int power, int initiative, int liveLength, int powerToReproduce, char sign, Position position = Position(0, 0)) : _power{ power }, 
-		_initiative{ initiative }, _liveLength{ liveLength }, _powerToReproduce{ powerToReproduce }, _sign{ sign }, _position{ position }
+		_initiative{ initiative }, _liveLength{ liveLength }, _powerToReproduce{ powerToReproduce }, _sign{ sign }, _position{ position }, _id{ _global_id_counter++ }
 	{ 
 		// jesli domyslne powerToReproduce - power jest wiekszy niz liveLength to organizm nigdy nie bedzie mogl sie reprodukowac
 		assert(powerToReproduce - power <= liveLength && "niepoprawne parametry organizmu");
@@ -36,6 +39,9 @@ public:
 
 	//W jakim celu definiować konstruktory i destruktory skoro nie zarządzamy ręcznie żadnymi zasobami(gotowe kontenery robią to za nas)?
 	//W tym przypadku ma zastosowanie zasada zera(Rule of zero) ponieważ nie zarządzamy ręcznie żadnymi zasobami na stercie.
+
+	static unsigned int getGlobalIdCounter();
+	static void setGlobalIdCounter(unsigned int newGlobalIdCounter);
 
 	Position getPosition();
 	void setPosition(Position position);
@@ -63,6 +69,9 @@ public:
 	bool getIsAnimal();
 	void setIsAnimal(bool isAnimal);
 
+	unsigned int getId();
+	void setId(unsigned int newId);
+
 	void initHistory(Organism* parent = nullptr, int turnNum = 0);
 	void clearHistory();
 	std::vector<std::shared_ptr<std::pair<int, int>>> getHistory();
@@ -70,7 +79,7 @@ public:
 	void logDeathTurn(int turnNum);
 
 	void initFamily(Organism* parent = nullptr);
-	bool isFamily(Organism* other);
+	bool isFamily(unsigned int other);
 
 	std::string printHistory();
 

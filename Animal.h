@@ -15,7 +15,7 @@ public:
 	bool getIsCarnivore();
 	void setIsCarnivore(bool isCarnivore);
 
-	std::string serialize();
+	std::string serialize() override;
 
 
 	std::string toString() override = 0;

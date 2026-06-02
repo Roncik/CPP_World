@@ -41,6 +41,16 @@ void Organism::setPowerToReproduce(int newPowerToReproduce)
 	this->_powerToReproduce = newPowerToReproduce;
 }
 
+unsigned int Organism::getGlobalIdCounter()
+{
+	return Organism::_global_id_counter;
+}
+
+void Organism::setGlobalIdCounter(unsigned int newGlobalIdCounter)
+{
+	Organism::_global_id_counter = newGlobalIdCounter;
+}
+
 Position Organism::getPosition()
 {
 	return this->_position;
@@ -86,6 +96,16 @@ void Organism::setIsAnimal(bool newIsAnimal)
 	this->_isAnimal = newIsAnimal;
 }
 
+unsigned int Organism::getId()
+{
+	return this->_id;
+}
+
+void Organism::setId(unsigned int newId)
+{
+	this->_id = newId;
+}
+
 void Organism::initHistory(Organism* parent, int turnNum)
 {
 	_selfRecord = std::make_shared<std::pair<int, int>>();
@@ -123,11 +143,11 @@ void Organism::initFamily(Organism* parent)
 	if (parent)
 		this->_family = parent->_family;
 	else
-		this->_family = std::make_shared<std::vector<Organism*>>();
-	this->_family->push_back(this);
+		this->_family = std::make_shared<std::vector<unsigned int>>();
+	this->_family->push_back(this->_id);
 }
 
-bool Organism::isFamily(Organism* other)
+bool Organism::isFamily(unsigned int other)
 {
 	return std::find(this->_family->begin(), this->_family->end(), other) != this->_family->end();
 }
@@ -189,6 +209,9 @@ std::string Organism::serialize()
 	//isCarnivore
 	bool isCarnivore{ false };
 	ss.write((char*)&isCarnivore, sizeof(isCarnivore));
+
+	//id
+	ss.write((char*)&this->_id, sizeof(this->_id));
 
 	return ss.str();
 }

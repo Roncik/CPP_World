@@ -55,6 +55,8 @@ std::string Animal::serialize()
 	//isCarnivore
 	ss.write((char*)&this->_isCarnivore, sizeof(bool));
 
+	//id
+	ss.write((char*)&this->_id, sizeof(this->_id));
+
 	return ss.str();
 }
-

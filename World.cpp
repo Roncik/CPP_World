@@ -171,6 +171,7 @@ std::string World::serialize()
 	ss.write((char*)&this->_worldX, sizeof(this->_worldX));
 	ss.write((char*)&this->_worldY, sizeof(this->_worldY));
 	ss.write((char*)&this->_turn, sizeof(this->_turn));
+	ss.write((char*)&this->_turn, sizeof(this->_turn));
 
 	auto organisms_size = this->organisms.size();
 	ss.write((char*)&organisms_size, sizeof(organisms_size));
@@ -223,6 +224,7 @@ void World::readWorld(std::string fileName)
 	***powerToReproduce
 	***isAnimal
 	***isCarnivore
+	***id
 	*/
 
 	// worldX
@@ -235,6 +237,7 @@ void World::readWorld(std::string fileName)
 	my_file.read((char*)&_turn, sizeof(_turn));
 
 	// organisms
+	unsigned int max_index{ 0 };
 	size_t organisms_size;
 	my_file.read((char*)&organisms_size, sizeof(organisms_size));
 
@@ -308,9 +311,18 @@ void World::readWorld(std::string fileName)
 			my_file.read((char*)&dummy, sizeof(dummy));
 		}
 
+		//id
+		auto id = orgInstance.getId();
+		my_file.read((char*)&id, sizeof(id));
+		newOrganism->setId(id);
+		if (id > max_index)
+			max_index = id;
+
 		addOrganism(newOrganism);
 	}
 
+	//set global index counter
+	Organism::setGlobalIdCounter(max_index + 1);
 
 
 	my_file.close();
@@ -364,8 +376,8 @@ void World::handleMove(size_t& orgIndex, bool isAnimal, bool isCarnivore)
 	{
 		if (nearbyOrganism->getSign() == 'T') // jesli plant to muchomor, animal i muchomor umiera
 		{
-			removeOrganismFixIndex(nearbyOrganismId);
 			removeOrganismFixIndex(orgIndex);
+			removeOrganismFixIndex(nearbyOrganismId);
 			return;
 		}
 
@@ -377,7 +389,7 @@ void World::handleMove(size_t& orgIndex, bool isAnimal, bool isCarnivore)
 		org->setPosition(chosenPosition);
 		return;
 	}
-	else if (org->isFamily(nearbyOrganism.get()))
+	else if (org->isFamily(nearbyOrganism->getId()))
 	{
 		// Relatives don't attack each other
 		
@@ -495,4 +507,5 @@ void World::clear()
 	this->_worldY = 0;
 	this->_turn = 0;
 	this->organisms.clear();
+	Organism::setGlobalIdCounter(0);
 }
