@@ -316,12 +316,6 @@ void World::readWorld(std::string fileName)
 		newOrganism->setId(id);
 		if (id > max_index)
 			max_index = id;
-		else
-		{
-			// i tak musimy odczytac bool zeby przesunac 'kursor odczytu' dalej
-			auto dummy = Organism().getIsAnimal();
-			my_file.read((char*)&dummy, sizeof(dummy));
-		}
 
 		addOrganism(newOrganism);
 	}
