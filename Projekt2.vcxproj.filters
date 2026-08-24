@@ -31,9 +31,6 @@
     <Filter Include="World">
       <UniqueIdentifier>{290be35f-abcc-4fba-bb39-32dc57616024}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Main">
-      <UniqueIdentifier>{0415856e-8f89-4f7d-b646-bf387b4585ad}</UniqueIdentifier>
-    </Filter>
     <Filter Include="OrganismFactory">
       <UniqueIdentifier>{50ce7b7d-61ff-440b-82a9-7ef939731fc0}</UniqueIdentifier>
     </Filter>
@@ -75,6 +72,21 @@
     </Filter>
     <Filter Include="ToadstoolFactory">
       <UniqueIdentifier>{1808a380-6357-4480-b9db-96b5d72857ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGUI">
+      <UniqueIdentifier>{7a240335-0478-4559-ade9-5f68d979b7f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGUI\imgui_dependencies">
+      <UniqueIdentifier>{f8b0dd9e-6c02-4239-85b5-0cd30cebed1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGUI\icons">
+      <UniqueIdentifier>{7698af7f-833f-4f8b-bd17-d8ee4347df03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="__main__">
+      <UniqueIdentifier>{0415856e-8f89-4f7d-b646-bf387b4585ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FileHelpers">
+      <UniqueIdentifier>{2c9f4e4a-a90e-42e0-b125-ecc0e42850b1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -138,6 +150,42 @@
     <ClInclude Include="ToadstoolFactory.h">
       <Filter>ToadstoolFactory</Filter>
     </ClInclude>
+    <ClInclude Include="ImGUIManager.h">
+      <Filter>ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imconfig.h">
+      <Filter>ImGUI\imgui_dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui.h">
+      <Filter>ImGUI\imgui_dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_impl_dx9.h">
+      <Filter>ImGUI\imgui_dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_impl_win32.h">
+      <Filter>ImGUI\imgui_dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_internal.h">
+      <Filter>ImGUI\imgui_dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_rectpack.h">
+      <Filter>ImGUI\imgui_dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_textedit.h">
+      <Filter>ImGUI\imgui_dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_truetype.h">
+      <Filter>ImGUI\imgui_dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\custom.h">
+      <Filter>ImGUI\icons</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\icons.h">
+      <Filter>ImGUI\icons</Filter>
+    </ClInclude>
+    <ClInclude Include="FileHelpers.h">
+      <Filter>FileHelpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -149,8 +197,8 @@
     <ClCompile Include="Animal.cpp">
       <Filter>Animal</Filter>
     </ClCompile>
-    <ClCompile Include="LivingWorld.cpp">
-      <Filter>Main</Filter>
+    <ClCompile Include="main.cpp">
+      <Filter>__main__</Filter>
     </ClCompile>
     <ClCompile Include="World.cpp">
       <Filter>World</Filter>
@@ -202,6 +250,33 @@
     </ClCompile>
     <ClCompile Include="ToadstoolFactory.cpp">
       <Filter>ToadstoolFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGUIManager.cpp">
+      <Filter>ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui.cpp">
+      <Filter>ImGUI\imgui_dependencies</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_demo.cpp">
+      <Filter>ImGUI\imgui_dependencies</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_draw.cpp">
+      <Filter>ImGUI\imgui_dependencies</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_impl_dx9.cpp">
+      <Filter>ImGUI\imgui_dependencies</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_impl_win32.cpp">
+      <Filter>ImGUI\imgui_dependencies</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_tables.cpp">
+      <Filter>ImGUI\imgui_dependencies</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_widgets.cpp">
+      <Filter>ImGUI\imgui_dependencies</Filter>
+    </ClCompile>
+    <ClCompile Include="FileHelpers.cpp">
+      <Filter>FileHelpers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

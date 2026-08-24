@@ -12,10 +12,6 @@ std::unique_ptr<OrganismFactory> OrganismFactoryRegistry::getFactory(char sign)
 {
     switch (sign)
     {
-        case 'O': return std::make_unique<OrganismFactory>(); //Organism
-        case 'P': return std::make_unique<PlantFactory>(); //Plant
-        case 'A': return std::make_unique<AnimalFactory>(); //Animal
-
         case 'G': return std::make_unique<GrassFactory>(); //Grass
 
         case 'S': return std::make_unique<SheepFactory>(); //Sheep
@@ -26,6 +22,6 @@ std::unique_ptr<OrganismFactory> OrganismFactoryRegistry::getFactory(char sign)
 
         case 'T': return std::make_unique<ToadstoolFactory>(); //Toadstool
 
-        default: throw std::logic_error("Factory not found"); return nullptr;
+        default: throw std::logic_error("Factory not found");
     }
 }

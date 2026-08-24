@@ -7,6 +7,6 @@ class PlantFactory : public OrganismFactory
 public:
 	virtual ~PlantFactory() = default;
 
-	std::unique_ptr<Organism> create() override;
+	std::unique_ptr<Organism> create() override = 0;
 };
 

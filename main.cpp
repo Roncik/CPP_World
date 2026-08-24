@@ -9,70 +9,72 @@
 #include "Dandelion.h"
 #include "Wolf.h"
 #include "Toadstool.h"
+#include "ImGUIManager.h"
 
-using org = std::unique_ptr<Organism>;
-
-int main()
+int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
-	
-	World world;
+	ImGUIManager::RunUI();
 
-	org grass = std::make_unique<Grass>();
-	grass->setPosition(Position(0, 0));
+	//using org = std::unique_ptr<Organism>;
 
-	org sheep = std::make_unique<Sheep>();
-	sheep->setPosition(Position(1, 1));
+	//World world;
 
-	org dandelion = std::make_unique<Dandelion>();
-	dandelion->setPosition(Position(2, 2));
+	//org grass = std::make_unique<Grass>();
+	//grass->setPosition(Position(0, 0));
 
-	org wolf = std::make_unique<Wolf>();
-	wolf->setPosition(Position(3, 3));
+	//org sheep = std::make_unique<Sheep>();
+	//sheep->setPosition(Position(1, 1));
 
-	org toadstool = std::make_unique<Toadstool>();
-	toadstool->setPosition(Position(4, 4));
+	//org dandelion = std::make_unique<Dandelion>();
+	//dandelion->setPosition(Position(2, 2));
 
-	//world.addOrganism(grass);
-	//world.addOrganism(sheep);
-	world.addOrganism(dandelion);
-	world.addOrganism(wolf);
-	//world.addOrganism(toadstool);
+	//org wolf = std::make_unique<Wolf>();
+	//wolf->setPosition(Position(3, 3));
 
-	// Tura 0
-	std::cout << world.toString() << '\n';
+	//org toadstool = std::make_unique<Toadstool>();
+	//toadstool->setPosition(Position(4, 4));
 
-	// Tura 1
-	world.makeTurn();
-	std::cout << world.toString() << '\n';
+	////world.addOrganism(grass);
+	////world.addOrganism(sheep);
+	//world.addOrganism(dandelion);
+	//world.addOrganism(wolf);
+	////world.addOrganism(toadstool);
 
-	world.writeWorld("testworld.bin");
-	world.readWorld("testworld.bin");
+	//// Tura 0
+	//std::cout << world.toString() << '\n';
 
-	std::cout << world.toString() << '\n';
+	//// Tura 1
+	//world.makeTurn();
+	//std::cout << world.toString() << '\n';
 
-	// Tura 2
-	world.makeTurn();
-	std::cout << world.toString() << '\n';
+	//world.writeWorld("testworld.bin");
+	//world.readWorld("testworld.bin");
 
-	// Tura 3
-	world.makeTurn();
-	std::cout << world.toString() << '\n';
+	//std::cout << world.toString() << '\n';
 
-	// Tura 4
-	world.makeTurn();
-	std::cout << world.toString() << '\n';
+	//// Tura 2
+	//world.makeTurn();
+	//std::cout << world.toString() << '\n';
 
-	// Tura 5
-	world.makeTurn();
-	std::cout << world.toString() << '\n';
+	//// Tura 3
+	//world.makeTurn();
+	//std::cout << world.toString() << '\n';
 
-	// Tura 6
-	world.makeTurn();
-	std::cout << world.toString() << '\n';
+	//// Tura 4
+	//world.makeTurn();
+	//std::cout << world.toString() << '\n';
 
-	// Tura 7
-	world.makeTurn();
-	std::cout << world.toString() << '\n';
+	//// Tura 5
+	//world.makeTurn();
+	//std::cout << world.toString() << '\n';
+
+	//// Tura 6
+	//world.makeTurn();
+	//std::cout << world.toString() << '\n';
+
+	//// Tura 7
+	//world.makeTurn();
+	//std::cout << world.toString() << '\n';
 
 	
 	

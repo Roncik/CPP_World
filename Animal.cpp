@@ -3,12 +3,12 @@
 
 bool Animal::getIsCarnivore()
 {
-	return this->isCarnivore;
+	return this->_isCarnivore;
 }
 
-void Animal::setIsCarnivore(bool isCarnivore)
+void Animal::setIsCarnivore(bool newIsCarnivore)
 {
-	this->isCarnivore = isCarnivore;
+	this->_isCarnivore = newIsCarnivore;
 }
 
 std::string Animal::serialize()
@@ -18,42 +18,45 @@ std::string Animal::serialize()
 
 	//znak na poczatku zeby wiadomo bylo od razu jaki organizm trzeba stworzyc
 	//sign
-	ss.write((char*)&this->sign, sizeof(this->sign));
+	ss.write((char*)&this->_sign, sizeof(this->_sign));
 
 	//position
 	Position pos = getPosition();
 	ss.write((char*)&pos, sizeof(pos));
 
 	//selfRecord
-	auto& selfrec = *selfRecord.get();
+	auto& selfrec = *_selfRecord.get();
 	ss.write((char*)&selfrec, sizeof(selfrec));
 
 	//familyHistory
-	size_t size = familyHistory.size();
+	size_t size = _familyHistory.size();
 	ss.write((char*)&size, sizeof(size));
-	std::for_each(familyHistory.begin(), familyHistory.end(), [&](auto& cur)
+	std::for_each(_familyHistory.begin(), _familyHistory.end(), [&](auto& cur)
 		{
 			auto& rec = *cur.get();
 			ss.write((char*)&rec, sizeof(rec));
 		});
 
 	//power
-	ss.write((char*)&this->power, sizeof(this->power));
+	ss.write((char*)&this->_power, sizeof(this->_power));
 
 	//initiative
-	ss.write((char*)&this->initiative, sizeof(this->initiative));
+	ss.write((char*)&this->_initiative, sizeof(this->_initiative));
 
 	//liveLength
-	ss.write((char*)&this->liveLength, sizeof(this->liveLength));
+	ss.write((char*)&this->_liveLength, sizeof(this->_liveLength));
 
 	//powerToReproduce
-	ss.write((char*)&this->powerToReproduce, sizeof(this->powerToReproduce));
+	ss.write((char*)&this->_powerToReproduce, sizeof(this->_powerToReproduce));
 
 	//isAnimal
-	ss.write((char*)&this->isAnimal, sizeof(this->isAnimal));
+	ss.write((char*)&this->_isAnimal, sizeof(this->_isAnimal));
 
 	//isCarnivore
-	ss.write((char*)&this->isCarnivore, sizeof(bool));
+	ss.write((char*)&this->_isCarnivore, sizeof(bool));
+
+	//id
+	ss.write((char*)&this->_id, sizeof(this->_id));
 
 	return ss.str();
 }

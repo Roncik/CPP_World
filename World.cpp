@@ -2,7 +2,8 @@
 #include "World.h"
 #include "OrganismFactoryRegistry.h"
 #include "Animal.h"
-#include "Organism.h"
+#include "Plant.h"
+#include "Grass.h"
 
 bool World::getOrganismFromPosition(int x, int y, size_t* index)
 {	
@@ -56,32 +57,37 @@ World::World(int worldX, int worldY)
 
 int World::getWorldX()
 {
-	return this->worldX;
+	return this->_worldX;
 }
 
-void World::setWorldX(int worldX)
+void World::setWorldX(int newWorldX)
 {
-	this->worldX = worldX;
+	this->_worldX = newWorldX;
 }
 
 int World::getWorldY()
 {
-	return this->worldY;
+	return this->_worldY;
 }
 
-void World::setWorldY(int worldY)
+void World::setWorldY(int newWorldY)
 {
-	this->worldY = worldY;
+	this->_worldY = newWorldY;
 }
 
 int World::getTurn()
 {
-	return this->turn;
+	return this->_turn;
 }
 
 void World::addOrganism(std::unique_ptr<Organism>& organism)
 {
 	this->organisms.push_back(std::move(organism));
+}
+
+const std::vector<std::unique_ptr<Organism>>& World::getOrganisms()
+{
+	return this->organisms;
 }
 
 void World::removeOrganism(size_t index)
@@ -148,22 +154,23 @@ void World::makeTurn()
 				std::unique_ptr<Organism> newOrganism = OrganismFactoryRegistry::getFactory(org->getSign())->create();
 				newOrganism->setPosition(possiblePositions[randomIndex]);
 				newOrganism->initHistory(organisms[i].get(), getTurn() + 1); // tutaj numerTury + 1 bo licznik jest incrementowany na końcu makeTurn
+				newOrganism->initFamily(organisms[i].get());
 
 				addOrganism(newOrganism);
 			}
 		}
 	}
 
-	++turn;
+	++_turn;
 }
 
 std::string World::serialize()
 {
 	std::stringstream ss{};
 	// tutaj trzeba uzyc write zeby zawsze zapisac odpowiednia ta sama ilosc bajtow - np worldX = 6 zapisze sie tylko jeden bajt przy <<
-	ss.write((char*)&this->worldX, sizeof(this->worldX));
-	ss.write((char*)&this->worldY, sizeof(this->worldY));
-	ss.write((char*)&this->turn, sizeof(this->turn));
+	ss.write((char*)&this->_worldX, sizeof(this->_worldX));
+	ss.write((char*)&this->_worldY, sizeof(this->_worldY));
+	ss.write((char*)&this->_turn, sizeof(this->_turn));
 
 	auto organisms_size = this->organisms.size();
 	ss.write((char*)&organisms_size, sizeof(organisms_size));
@@ -198,7 +205,7 @@ void World::readWorld(std::string fileName)
 		throw std::runtime_error("couldn't open file for import");
 	}
 
-	organisms.clear();
+	this->clear();
 
 	/*
 	struktura serializacji:
@@ -216,71 +223,75 @@ void World::readWorld(std::string fileName)
 	***powerToReproduce
 	***isAnimal
 	***isCarnivore
+	***id
 	*/
 
 	// worldX
-	my_file.read((char*)&worldX, sizeof(worldX));
+	my_file.read((char*)&_worldX, sizeof(_worldX));
 
 	// worldY
-	my_file.read((char*)&worldY, sizeof(worldY));
+	my_file.read((char*)&_worldY, sizeof(_worldY));
 
 	// turn
-	my_file.read((char*)&turn, sizeof(turn));
+	my_file.read((char*)&_turn, sizeof(_turn));
 
 	// organisms
+	unsigned int max_index{ 0 };
 	size_t organisms_size;
 	my_file.read((char*)&organisms_size, sizeof(organisms_size));
 
+	auto orgInstance = Grass();
 	for (size_t i = 0; i < organisms_size; ++i)
 	{
 		// sign
-		auto sign = Organism().getSign(); // trik zeby auto sign zawsze byl tym samym typem co w Organism
+		decltype(orgInstance.getSign()) sign; // trik zeby auto sign zawsze byl tym samym typem co w Organism
 		my_file.read((char*)&sign, sizeof(sign));
 		std::unique_ptr<Organism> newOrganism = OrganismFactoryRegistry::getFactory(sign)->create();
 		newOrganism->setSign(sign);
 
 		// position
-		auto position = Organism().getPosition();
+		decltype(orgInstance.getPosition()) position;
 		my_file.read((char*)&position, sizeof(position));
 		newOrganism->setPosition(position);
 
 		// selfRecord
-		auto selfRecord = Organism().getSelfRecord();
+		auto selfRecord = *orgInstance.getSelfRecord().get();
 		my_file.read((char*)&selfRecord, sizeof(selfRecord));
 		newOrganism->setSelfRecord(selfRecord);
 
 		// familyHistory
-		size_t size{};
+		decltype(this->organisms.size()) size{};
 		my_file.read((char*)&size, sizeof(size));
+		newOrganism->clearHistory();
 		while (size--)
 		{
-			auto record = Organism().getSelfRecord();
+			auto record = *orgInstance.getSelfRecord().get();
 			my_file.read((char*)&record, sizeof(record));
 			newOrganism->addFamilyRecord(record);
 		}
 
 		// power
-		auto power = Organism().getPower();
+		decltype(orgInstance.getPower()) power;
 		my_file.read((char*)&power, sizeof(power));
 		newOrganism->setPower(power);
 
 		// initiative
-		auto initiative = Organism().getInitiative();
+		decltype(orgInstance.getInitiative()) initiative;
 		my_file.read((char*)&initiative, sizeof(initiative));
 		newOrganism->setInitiative(initiative);
 
 		// liveLength
-		auto liveLength = Organism().getLiveLength();
+		decltype(orgInstance.getLiveLength()) liveLength;
 		my_file.read((char*)&liveLength, sizeof(liveLength));
 		newOrganism->setLiveLength(liveLength);
 
 		// powerToReproduce
-		auto powerToReproduce = Organism().getPowerToReproduce();
+		decltype(orgInstance.getPowerToReproduce()) powerToReproduce;
 		my_file.read((char*)&powerToReproduce, sizeof(powerToReproduce));
 		newOrganism->setPowerToReproduce(powerToReproduce);
 
 		// isAnimal
-		auto isAnimal = Organism().getIsAnimal();
+		decltype(orgInstance.getIsAnimal()) isAnimal;
 		my_file.read((char*)&isAnimal, sizeof(isAnimal));
 		newOrganism->setIsAnimal(isAnimal);
 
@@ -288,10 +299,23 @@ void World::readWorld(std::string fileName)
 		if (isAnimal)
 		{
 			Animal* animal = dynamic_cast<Animal*>(newOrganism.get());
-			auto isCarnivore = animal->getIsCarnivore();
+			decltype(animal->getIsCarnivore()) isCarnivore;
 			my_file.read((char*)&isCarnivore, sizeof(isCarnivore));
 			animal->setIsCarnivore(isCarnivore);
 		}
+		else
+		{
+			// i tak musimy odczytac bool zeby przesunac 'kursor odczytu' dalej
+			decltype(orgInstance.getIsAnimal()) dummy;
+			my_file.read((char*)&dummy, sizeof(dummy));
+		}
+
+		//id
+		decltype(orgInstance.getId()) id;
+		my_file.read((char*)&id, sizeof(id));
+		newOrganism->setId(id);
+		if (id > max_index)
+			max_index = id;
 		else
 		{
 			// i tak musimy odczytac bool zeby przesunac 'kursor odczytu' dalej
@@ -302,6 +326,8 @@ void World::readWorld(std::string fileName)
 		addOrganism(newOrganism);
 	}
 
+	//set global index counter
+	Organism::setGlobalIdCounter(max_index + 1);
 
 
 	my_file.close();
@@ -346,6 +372,8 @@ void World::handleMove(size_t& orgIndex, bool isAnimal, bool isCarnivore)
 		return;
 	}
 
+	assert(nearbyOrganismId != orgIndex);
+
 	auto& nearbyOrganism = organisms[nearbyOrganismId];
 	bool isNearbyOrganismAnimal = nearbyOrganism->getIsAnimal();
 
@@ -353,8 +381,8 @@ void World::handleMove(size_t& orgIndex, bool isAnimal, bool isCarnivore)
 	{
 		if (nearbyOrganism->getSign() == 'T') // jesli plant to muchomor, animal i muchomor umiera
 		{
-			removeOrganismFixIndex(nearbyOrganismId);
 			removeOrganismFixIndex(orgIndex);
+			removeOrganismFixIndex(nearbyOrganismId);
 			return;
 		}
 
@@ -364,6 +392,12 @@ void World::handleMove(size_t& orgIndex, bool isAnimal, bool isCarnivore)
 
 		removeOrganismFixIndex(nearbyOrganismId);
 		org->setPosition(chosenPosition);
+		return;
+	}
+	else if (org->isFamily(nearbyOrganism->getId()))
+	{
+		// Relatives don't attack each other
+		
 		return;
 	}
 
@@ -391,6 +425,7 @@ void World::handleMove(size_t& orgIndex, bool isAnimal, bool isCarnivore)
 			org->setPosition(chosenPosition);
 			removeOrganismFixIndex(nearbyOrganismId);
 
+			org->setPosition(chosenPosition);
 			return;
 		}
 		else
@@ -438,3 +473,44 @@ std::string World::toString()
 	return result;
 }
 
+void World::Randomize(int worldX, int worldY, size_t numOfOrganisms, const std::vector<char>& possibleOrganismsSigns)
+{
+	if (!worldX || !worldY)
+		return;
+	
+	if (numOfOrganisms > (worldX * worldY))
+		throw std::logic_error("The chosen number of organisms couldn't fit in a world of this size");
+
+	srand(static_cast<unsigned int>(time(0)));
+	
+	this->clear();
+
+	setWorldX(worldX);
+	setWorldY(worldY);
+
+	for (size_t i = 0; i < numOfOrganisms; ++i)
+	{
+		const char& randomSign = possibleOrganismsSigns[rand() % possibleOrganismsSigns.size()];
+
+		auto org = OrganismFactoryRegistry::getFactory(randomSign)->create();
+		Position randPosition;
+		do
+		{
+			randPosition = Position(rand() % worldX, rand() % worldY);
+		} 
+		while (this->getOrganismFromPosition(randPosition.getX(), randPosition.getY()));
+
+
+		org->setPosition(randPosition);
+		addOrganism(org);
+	}
+}
+
+void World::clear()
+{
+	this->_worldX = 0;
+	this->_worldY = 0;
+	this->_turn = 0;
+	this->organisms.clear();
+	Organism::setGlobalIdCounter(0);
+}

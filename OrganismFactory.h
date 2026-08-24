@@ -5,6 +5,6 @@ class OrganismFactory
 {
 public:
 	virtual ~OrganismFactory() = default;
-	virtual std::unique_ptr<Organism> create();
+	virtual std::unique_ptr<Organism> create() = 0;
 };
 

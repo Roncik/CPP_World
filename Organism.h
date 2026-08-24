@@ -1,35 +1,37 @@
 ﻿#pragma once
 #include "Position.h"
+//#include "ImGUIManager.h"
 
 class Organism
 {
 private:
-	Position position;
+	inline static unsigned int _global_id_counter{ 0 };
+
+	Position _position;
 
 protected:
-	std::shared_ptr<std::pair<int, int>> selfRecord;
-	std::vector<std::shared_ptr<std::pair<int, int>>> familyHistory{}; // historia to lista par; tur urodzin(1) i śmierci(2) przodków
+	unsigned int _id{ 0 };
+
+	std::shared_ptr<std::pair<int, int>> _selfRecord;
+	std::vector<std::shared_ptr<std::pair<int, int>>> _familyHistory{}; // historia to lista par; tur urodzin(1) i śmierci(2) przodków
+	std::shared_ptr<std::vector<unsigned int>> _family;
 
 	// Parametry organizmu - ustawia je organizm indywidualnie
-	int power;
-	int initiative;
-	int liveLength;
-	int powerToReproduce;
-	char sign;
-	bool isAnimal{ false };
-
-	//power = 3
-	//powerToReproduce = 6
-	//liveLength = 3
-
+	int _power;
+	int _initiative;
+	int _liveLength;
+	int _powerToReproduce;
+	char _sign;
+	bool _isAnimal{ false };
 public:
-	Organism(int power, int initiative, int liveLength, int powerToReproduce, char sign, Position position = Position(0, 0)) : power{ power }, 
-		initiative{ initiative }, liveLength{ liveLength }, powerToReproduce{ powerToReproduce }, sign{ sign }, position{ position }
+	Organism(int power, int initiative, int liveLength, int powerToReproduce, char sign, Position position = Position(0, 0)) : _power{ power }, 
+		_initiative{ initiative }, _liveLength{ liveLength }, _powerToReproduce{ powerToReproduce }, _sign{ sign }, _position{ position }, _id{ _global_id_counter++ }
 	{ 
 		// jesli domyslne powerToReproduce - power jest wiekszy niz liveLength to organizm nigdy nie bedzie mogl sie reprodukowac
 		assert(powerToReproduce - power <= liveLength && "niepoprawne parametry organizmu");
 
 		initHistory();
+		initFamily();
 	}
 	Organism(char sign) : Organism(0, 0, 0, 0, sign) {} //constructor delegation
 	Organism() : Organism('O') {} //constructor delegation
@@ -38,10 +40,13 @@ public:
 	//W jakim celu definiować konstruktory i destruktory skoro nie zarządzamy ręcznie żadnymi zasobami(gotowe kontenery robią to za nas)?
 	//W tym przypadku ma zastosowanie zasada zera(Rule of zero) ponieważ nie zarządzamy ręcznie żadnymi zasobami na stercie.
 
+	static unsigned int getGlobalIdCounter();
+	static void setGlobalIdCounter(unsigned int newGlobalIdCounter);
+
 	Position getPosition();
 	void setPosition(Position position);
 
-	std::pair<int, int> getSelfRecord();
+	std::shared_ptr<std::pair<int, int>> getSelfRecord();
 	void setSelfRecord(std::pair<int, int> selfRecord);
 
 	void addFamilyRecord(const std::pair<int, int>& record);
@@ -64,12 +69,23 @@ public:
 	bool getIsAnimal();
 	void setIsAnimal(bool isAnimal);
 
+	unsigned int getId();
+	void setId(unsigned int newId);
+
 	void initHistory(Organism* parent = nullptr, int turnNum = 0);
+	void clearHistory();
 	std::vector<std::shared_ptr<std::pair<int, int>>> getHistory();
 	void setHistory(std::vector<std::shared_ptr<std::pair<int, int>>> newHistory);
 	void logDeathTurn(int turnNum);
 
-	virtual std::string toString();
+	void initFamily(Organism* parent = nullptr);
+	bool isFamily(unsigned int other);
+
+	std::string printHistory();
+
+	virtual std::string toString() = 0;
 
 	virtual std::string serialize();
+
+	virtual IDirect3DTexture9* getTexture();
 };
